@@ -1,0 +1,3270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Little World Universe ♡</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap');
+
+:root {
+ --pink: #f49ac2;
+ --blue: #8ec5fc;
+ --deep: #7b5ea7;
+ --heading: #6a4c93;
+ --subhead: #b85b8e;
+ --ink: #4a4458;
+ --muted: #867e99;
+ --soft-text: #6c6480;
+ --line: #eadcf2;
+ --card-bg: #ffffffea;
+ --input-bg: #ffffff;
+ --btn-soft: linear-gradient(135deg, #fce1ee, #e0efff);
+ --pill-bg: #ffffffeb;
+ --hover-pill: #f4e6f8;
+ --page-bg:
+  radial-gradient(circle at 10% 6%, #ffd6e8 0, transparent 32%),
+  radial-gradient(circle at 90% 14%, #cfe8ff 0, transparent 34%),
+  radial-gradient(circle at 18% 78%, #d9eeff 0, transparent 34%),
+  radial-gradient(circle at 86% 88%, #ffe0ef 0, transparent 34%),
+  linear-gradient(135deg, #fdf6fa 0%, #f3f8ff 100%);
+ --shadow: 0 14px 36px #7b5ea71a;
+}
+
+body.dark {
+ --pink: #f598c4;
+ --blue: #7cc0ff;
+ --deep: #e2b6ff;
+ --heading: #f6c6e0;
+ --subhead: #9fd2ff;
+ --ink: #eceaf5;
+ --muted: #b0a8c9;
+ --soft-text: #cbc5e2;
+ --line: #3b3559;
+ --card-bg: #1e1b33ea;
+ --input-bg: #151326;
+ --btn-soft: linear-gradient(135deg, #3e2647, #223659);
+ --pill-bg: #25213eeb;
+ --hover-pill: #342d54;
+ --page-bg:
+  radial-gradient(circle at 15% 12%, #472040 0, transparent 36%),
+  radial-gradient(circle at 85% 22%, #1b3861 0, transparent 38%),
+  radial-gradient(circle at 50% 85%, #2d1f4d 0, transparent 40%),
+  linear-gradient(135deg, #131122 0%, #10192c 100%);
+ --shadow: 0 18px 46px #06051088;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+ margin: 0;
+ color: var(--ink);
+ font-family: 'DM Sans', sans-serif;
+ background: var(--page-bg);
+ background-attachment: fixed;
+ min-height: 100vh;
+ overflow-x: hidden;
+ transition: background .35s, color .3s;
+}
+button, input, textarea, select { font: inherit; }
+button, select { cursor: pointer; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+ outline: 3px solid #d8b4fe;
+ outline-offset: 2px;
+}
+
+/* Starry night particles */
+.stars {
+ position: fixed; inset: 0; pointer-events: none; z-index: -1;
+ opacity: 0; transition: opacity .5s;
+ background-image:
+  radial-gradient(1.5px 1.5px at 12% 18%, #ffd6eb 50%, transparent 100%),
+  radial-gradient(1.5px 1.5px at 28% 42%, #bde0fe 50%, transparent 100%),
+  radial-gradient(2px 2px at 45% 15%, #ffafcc 50%, transparent 100%),
+  radial-gradient(1.5px 1.5px at 67% 33%, #a2d2ff 50%, transparent 100%),
+  radial-gradient(1.5px 1.5px at 82% 20%, #ffffff 50%, transparent 100%),
+  radial-gradient(1.5px 1.5px at 90% 58%, #bde0fe 50%, transparent 100%),
+  radial-gradient(1px 1px at 20% 75%, #ffafcc 50%, transparent 100%),
+  radial-gradient(2px 2px at 55% 82%, #ffffff 50%, transparent 100%),
+  radial-gradient(1.5px 1.5px at 76% 88%, #ffd6eb 50%, transparent 100%);
+ animation: twinkle 4.5s ease-in-out infinite alternate;
+}
+body.dark .stars { opacity: .85; }
+@keyframes twinkle { 0% { opacity: .45; } 100% { opacity: .95; } }
+
+/* Ambient Floating Petals & Sparkles */
+.ambient-layer {
+ position: fixed; inset: 0; pointer-events: none; z-index: 4; overflow: hidden;
+}
+.ambient-petal {
+ position: absolute; top: -40px; font-size: 18px; opacity: .75;
+ animation: fallPetal linear forwards;
+}
+@keyframes fallPetal {
+ 0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+ 15% { opacity: .82; }
+ 85% { opacity: .75; }
+ 100% { transform: translateY(108vh) translateX(65px) rotate(360deg); opacity: 0; }
+}
+
+.sparkle {
+ position: fixed; pointer-events: none; z-index: -1; opacity: .4; font-size: 18px;
+ background: linear-gradient(135deg, #ec7fb3, #6eb6ff);
+ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+ animation: floatDrift 8s ease-in-out infinite;
+}
+@keyframes floatDrift { 50% { transform: translateY(-20px) rotate(14deg); } }
+
+.cursor-sparkle {
+ position: fixed; pointer-events: none; z-index: 350;
+ background: linear-gradient(135deg, #f48fb1, #64b5f6);
+ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+ animation: pop .85s forwards; font-size: 18px; font-weight: bold;
+}
+@keyframes pop { to { transform: translateY(-30px) scale(.2); opacity: 0; } }
+
+/* Topbar */
+.topbar {
+ position: sticky; top: 0; z-index: 60;
+ background: var(--card-bg); backdrop-filter: blur(16px);
+ border-bottom: 1px solid var(--line);
+ padding: 11px max(4%, calc((100% - 1220px)/2));
+ display: flex; align-items: center; justify-content: space-between; gap: 10px;
+ box-shadow: 0 5px 20px #9c72920f;
+}
+.brand {
+ font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700;
+ background: linear-gradient(135deg, #d8629f, #5b9df0);
+ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+ cursor: pointer; white-space: nowrap;
+}
+body.dark .brand {
+ background: linear-gradient(135deg, #ff9ecd, #8ec5fc);
+ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.top-actions { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+.pill {
+ border: 1px solid var(--line); background: var(--pill-bg);
+ border-radius: 99px; padding: 7px 12px; color: var(--heading);
+ font-size: 12px; font-weight: 700; box-shadow: 0 3px 9px #b48da512;
+ transition: .2s;
+}
+.pill:hover { transform: translateY(-1px); background: var(--hover-pill); }
+
+/* Hero Game Banner */
+.hero.game-banner {
+ max-width: 1220px; min-height: 350px; margin: 20px auto 18px; padding: 0 32px;
+ display: grid; grid-template-columns: 1.08fr .92fr; align-items: stretch;
+ overflow: hidden; border: 1px solid var(--line); border-radius: 32px;
+ background: linear-gradient(115deg, #fff0f7 0%, #f4eeff 52%, #e6f4ff 100%);
+ box-shadow: var(--shadow); position: relative;
+}
+body.dark .hero.game-banner {
+ background: linear-gradient(115deg, #321d38 0%, #241f42 52%, #192d4a 100%);
+}
+.banner-copy { padding: 30px 12px 26px 10px; z-index: 2; }
+.eyebrow {
+ font-size: 10.5px; letter-spacing: 2.5px; text-transform: uppercase; font-weight: 700;
+ background: linear-gradient(90deg, #d8629f, #5b9df0);
+ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.banner-copy h1 {
+ font: 700 clamp(38px, 4.8vw, 60px)/.98 'Playfair Display', serif;
+ color: var(--heading); margin: 12px 0;
+}
+.banner-copy h1 em {
+ font-style: italic;
+ background: linear-gradient(135deg, #ec72ad, #62a8f7);
+ -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.banner-copy p { margin: 0; max-width: 440px; font-size: 13.5px; line-height: 1.75; color: var(--soft-text); }
+.banner-actions { display: flex; gap: 9px; margin-top: 18px; flex-wrap: wrap; }
+.hero-stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.stat {
+ background: var(--pill-bg); border: 1px solid var(--line);
+ border-radius: 16px; padding: 8px 15px; min-width: 84px;
+}
+.stat strong { display: block; color: var(--heading); font-size: 18px; }
+.stat small { color: var(--muted); font-size: 10px; font-weight: 600; }
+
+.banner-art { position: relative; min-height: 320px; overflow: hidden; }
+.banner-princess {
+ position: absolute; z-index: 2; bottom: 22px; left: 24%;
+ width: 220px; height: 300px; filter: drop-shadow(0 12px 10px #9774a644);
+ transform: rotate(-2deg); overflow: visible;
+ animation: princessIdle 3.8s ease-in-out infinite;
+}
+.banner-pet-svg {
+ position: absolute; z-index: 3; bottom: 26px; right: 8%;
+ width: 115px; height: 115px; filter: drop-shadow(0 8px 7px #9774a633);
+ animation: petBounce 2.6s ease-in-out infinite;
+}
+.banner-ground {
+ position: absolute; bottom: -60px; left: -3%; width: 110%; height: 145px;
+ border-radius: 50% 50% 0 0; background: linear-gradient(180deg, #d8edc9, #b9dba9);
+}
+body.dark .banner-ground { background: linear-gradient(180deg, #2d423e, #1e2d33); }
+.banner-cloud { position: absolute; color: #fff; font-size: 70px; text-shadow: 0 7px 15px #b99fc633; opacity: .9; }
+.cloud-one { top: 14px; left: 10%; }
+.cloud-two { top: 55px; right: 4%; font-size: 52px; }
+.banner-sparkle { position: absolute; top: 24px; left: 40%; color: #d79ab9; letter-spacing: 8px; }
+.banner-flower { position: absolute; z-index: 2; font-size: 32px; }
+.flower-one { bottom: 34px; left: 10%; }
+.flower-two { bottom: 60px; right: 3%; }
+.banner-ribbon {
+ position: absolute; z-index: 4; bottom: 16px; left: 32%;
+ background: var(--pill-bg); color: var(--subhead); border: 1px solid var(--line);
+ border-radius: 99px; padding: 7px 16px; font-size: 9.5px; font-weight: 800; letter-spacing: 1.8px;
+}
+
+/* Categorized Storybook Navigation + Slide Controls */
+.nav-wrapper {
+ max-width: 1220px; margin: 0 auto 22px; padding: 0 14px;
+ display: flex; align-items: center; gap: 8px;
+}
+.nav-arrow {
+ flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+ border: 1px solid var(--line); background: var(--card-bg); color: var(--heading);
+ display: grid; place-items: center; font-size: 13px; box-shadow: 0 4px 12px #7b5ea714;
+ transition: .2s;
+}
+.nav-arrow:hover { background: var(--hover-pill); transform: scale(1.07); }
+.nav {
+ flex: 1; display: flex; gap: 7px; overflow-x: auto; flex-wrap: nowrap;
+ padding: 4px 2px 8px; scrollbar-width: none;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav button {
+ white-space: nowrap; border: 1px solid var(--line); background: var(--card-bg);
+ border-radius: 14px; padding: 9px 14px; color: var(--soft-text);
+ font-size: 12px; font-weight: 700; box-shadow: 0 4px 10px #a77a9d0b; transition: .2s;
+}
+.nav button:hover, .nav button.active {
+ background: linear-gradient(135deg, #ec7db4, #7bb6fa);
+ color: #fff; border-color: transparent; transform: translateY(-2px);
+ box-shadow: 0 7px 16px #9a78ad38;
+}
+
+/* Main Pages */
+main { max-width: 1220px; margin: auto; padding: 0 18px 90px; }
+.page { display: none; animation: fade .35s ease; }
+.page.active { display: block; }
+@keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.section-head { text-align: center; margin: 18px 0 24px; }
+.section-head h2 { font: 700 34px 'Playfair Display', serif; color: var(--heading); margin: 4px 0 6px; }
+.section-head p { color: var(--muted); font-size: 13.5px; line-height: 1.6; margin: 0; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.card {
+ background: var(--card-bg); border: 1px solid var(--line); border-radius: 24px;
+ padding: 22px; box-shadow: var(--shadow); backdrop-filter: blur(10px);
+}
+.card h3 { color: var(--heading); font: 700 18px 'DM Sans', sans-serif; margin: 4px 0 8px; }
+.card p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+.big-emoji { font-size: 48px; text-align: center; margin: 8px 0; }
+
+.btn {
+ border: 0; border-radius: 99px; padding: 10px 18px;
+ background: linear-gradient(135deg, #f082b8, #7cb8ff);
+ color: white; font-weight: 700; font-size: 12.5px;
+ box-shadow: 0 6px 16px #c28dbb38; transition: .2s;
+}
+.btn:hover { transform: translateY(-2px); filter: brightness(1.03); }
+.btn.secondary {
+ background: var(--input-bg); color: var(--heading);
+ border: 1px solid var(--line); box-shadow: none;
+}
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 12px; }
+.muted { color: var(--muted); font-size: 12px; }
+.notice {
+ background: #fff2f8; border: 1px dashed #e6b4d2; border-radius: 15px;
+ padding: 12px; color: #9c5680; font-size: 12px; line-height: 1.55; margin-top: 12px;
+}
+body.dark .notice { background: #2c213a; border-color: #543d6e; color: #e2b8d8; }
+
+.progress { height: 9px; background: #ede3f5; border-radius: 99px; overflow: hidden; }
+body.dark .progress { background: #332c52; }
+.progress span { display: block; height: 100%; background: linear-gradient(90deg, #f59ec8, #83beff); border-radius: 99px; transition: width .35s; }
+
+input, textarea, select {
+ width: 100%; border: 1px solid var(--line); border-radius: 13px;
+ padding: 10px 13px; background: var(--input-bg); color: var(--ink);
+}
+textarea { min-height: 95px; resize: vertical; }
+label { display: block; font-size: 12px; color: var(--heading); font-weight: 700; margin: 10px 0 5px; }
+
+.item-btn {
+ border: 1px solid var(--line); border-radius: 15px; background: var(--input-bg);
+ padding: 12px 8px; color: var(--ink); font-size: 12px; transition: .2s; text-align: center;
+}
+.item-btn.selected, .item-btn:hover {
+ border-color: var(--pink); background: #fff0f7; box-shadow: 0 4px 12px #e9a8c324; transform: translateY(-2px);
+}
+body.dark .item-btn.selected, body.dark .item-btn:hover { background: #382747; }
+.item-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 9px; margin: 10px 0; }
+.divider { height: 1px; background: var(--line); margin: 16px 0; }
+.tag { display: inline-block; background: #fce6f2; color: #ad5d8b; border-radius: 99px; padding: 5px 11px; font-size: 10.5px; font-weight: 700; }
+body.dark .tag { background: #3b2646; color: #f6b6da; }
+
+/* Home World Cards */
+.home-welcome { display: flex; justify-content: space-between; align-items: center; margin: 10px 4px 18px; }
+.home-welcome h2 { font: 700 clamp(26px, 3.8vw, 36px) 'Playfair Display', serif; color: var(--heading); margin: 8px 0 4px; }
+.world-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 15px; }
+.world-card {
+ position: relative; min-height: 245px; text-align: left; border: 1px solid var(--line);
+ border-radius: 25px; padding: 18px; overflow: hidden; display: flex; flex-direction: column;
+ align-items: flex-start; box-shadow: var(--shadow); transition: .25s;
+}
+.world-card:hover { transform: translateY(-6px); }
+.world-dress { background: linear-gradient(155deg, #fff0f7, #f8dced); }
+.world-pet { background: linear-gradient(155deg, #f0f8ff, #dcedfb); }
+.world-room { background: linear-gradient(155deg, #fff8e9, #f7e8d2); }
+.world-games { background: linear-gradient(155deg, #f4f0ff, #e6ddfc); }
+body.dark .world-dress { background: linear-gradient(155deg, #42253f, #2f1f3d); }
+body.dark .world-pet { background: linear-gradient(155deg, #1d354f, #1c2845); }
+body.dark .world-room { background: linear-gradient(155deg, #3d332c, #2d2438); }
+body.dark .world-games { background: linear-gradient(155deg, #31274f, #232245); }
+.world-label { font-size: 9px; letter-spacing: 1.7px; font-weight: 900; color: var(--subhead); }
+.world-art { font-size: 68px; line-height: 1.15; align-self: center; margin: 12px 0 10px; }
+.world-card strong { font: 700 16.5px 'DM Sans', sans-serif; color: var(--heading); }
+.world-card small { font-size: 11px; line-height: 1.45; color: var(--muted); margin-top: 4px; }
+.world-go { font-size: 9.5px; font-weight: 900; letter-spacing: 1px; color: var(--subhead); margin-top: auto; padding-top: 12px; }
+
+.home-lower { display: grid; grid-template-columns: 1.25fr .75fr; gap: 15px; margin-top: 16px; }
+.mission-card { display: flex; align-items: center; gap: 16px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 23px; padding: 20px; box-shadow: var(--shadow); }
+.mission-icon { font-size: 44px; background: #fff0f6; border-radius: 18px; padding: 12px; }
+body.dark .mission-icon { background: #362342; }
+.quote-card { background: linear-gradient(140deg, #f4edff, #fff0f7); border-radius: 23px; padding: 20px; border: 1px solid var(--line); }
+body.dark .quote-card { background: linear-gradient(140deg, #2a2145, #38223d); }
+.quote-card > span { font: 46px Georgia; color: #d89cbe; line-height: .8; }
+.quote-card p { font: italic 16.5px 'Playfair Display', serif; color: var(--heading); min-height: 44px; }
+.home-progress { margin-top: 16px; background: var(--card-bg); border: 1px solid var(--line); border-radius: 20px; padding: 16px 20px; }
+
+/* Mini Games Sub-Navigation Bar */
+.arcade-subtabs {
+ display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+ margin: 0 auto 22px; padding: 8px; max-width: 820px;
+ background: var(--card-bg); border: 1px solid var(--line); border-radius: 99px;
+ box-shadow: var(--shadow);
+}
+.arcade-subtabs button {
+ border: 1px solid transparent; background: transparent; border-radius: 99px;
+ padding: 9px 16px; font-size: 12.5px; font-weight: 700; color: var(--soft-text);
+ transition: .2s;
+}
+.arcade-subtabs button:hover { background: var(--hover-pill); color: var(--heading); }
+.arcade-subtabs button.active {
+ background: linear-gradient(135deg, #f082b8, #7cb8ff);
+ color: #fff; box-shadow: 0 5px 14px #c28dbb3a;
+}
+.arcade-panel { display: none; animation: fade .3s ease; }
+.arcade-panel.active { display: block; }
+
+/* Princess Dress Up Studio */
+.dress-layout { display: grid; grid-template-columns: minmax(300px, .9fr) minmax(0, 1.1fr); gap: 20px; align-items: start; }
+.dress-preview-card { position: sticky; top: 75px; }
+.dress-stage {
+ min-height: 490px; border-radius: 28px; position: relative; overflow: hidden;
+ display: flex; align-items: center; justify-content: center;
+ background: radial-gradient(ellipse at 50% 35%, #fff 0, #fff5fb 30%, #f2e8ff 68%, #dcecff 100%);
+ border: 1px solid var(--line); box-shadow: inset 0 0 0 7px #ffffff70;
+}
+body.dark .dress-stage {
+ background: radial-gradient(ellipse at 50% 35%, #463254 0, #2b2342 65%, #1d2842 100%);
+ box-shadow: inset 0 0 0 7px #ffffff12;
+}
+#princessArt {
+ width: min(86%, 320px); height: 390px; z-index: 2; overflow: visible;
+ filter: drop-shadow(0 12px 12px #8d6b9940); animation: princessIdle 3.8s ease-in-out infinite;
+}
+@keyframes princessIdle { 0%, 100% { transform: translateY(0) rotate(-.5deg); } 50% { transform: translateY(-7px) rotate(.5deg); } }
+#princessArt.makeover-pop { animation: makeoverPop .55s ease !important; }
+@keyframes makeoverPop { 50% { transform: scale(1.06) rotate(2deg); } }
+.dress-caption {
+ position: absolute; bottom: 14px; z-index: 4;
+ background: var(--pill-bg); border: 1px solid var(--line);
+ padding: 8px 20px; border-radius: 99px; font-weight: 800; font-size: 12px; color: var(--heading);
+}
+.dress-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 14px; }
+.dress-tabs button {
+ border: 1px solid var(--line); background: var(--input-bg); border-radius: 99px;
+ padding: 8px 12px; color: var(--heading); font-size: 11.5px; font-weight: 700;
+}
+.dress-tabs button.active { background: linear-gradient(135deg, #ec7db4, #7bb6fa); color: #fff; border-color: transparent; }
+.dress-wardrobe { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; max-height: 360px; overflow-y: auto; padding-right: 4px; }
+.dress-choice {
+ min-height: 92px; border: 1px solid var(--line); background: var(--input-bg);
+ border-radius: 17px; padding: 9px 6px; display: flex; flex-direction: column;
+ align-items: center; justify-content: center; gap: 4px; transition: .2s;
+}
+.dress-choice .choice-emoji { font-size: 28px; }
+.dress-choice .choice-name { font-size: 10.5px; font-weight: 700; color: var(--heading); text-align: center; }
+.dress-choice.selected { border: 2px solid #e076b0; background: #fff0f7; transform: scale(1.03); }
+body.dark .dress-choice.selected { background: #3b264a; }
+.princess-selector { display: flex; gap: 7px; justify-content: center; margin-bottom: 10px; }
+.princess-pill { border: 1px solid var(--line); background: var(--input-bg); border-radius: 99px; padding: 6px 12px; font-size: 11.5px; font-weight: 700; color: var(--heading); }
+.princess-pill.selected { background: #fce6f2; border-color: var(--pink); }
+body.dark .princess-pill.selected { background: #3e284c; }
+
+/* Pet Stage */
+.pet-stage {
+ position: relative; overflow: hidden; min-height: 330px; border-radius: 24px;
+ display: flex; flex-direction: column; align-items: center; justify-content: center;
+ background: radial-gradient(circle at 50% 38%, #fff 0, #f5eaff 52%, #e6f4ff 100%);
+ border: 1px solid var(--line);
+}
+body.dark .pet-stage { background: radial-gradient(circle at 50% 38%, #3a2d54 0, #232240 65%, #192a45 100%); }
+#petArt { width: 230px; height: 215px; z-index: 2; animation: petBounce 2.8s ease-in-out infinite; filter: drop-shadow(0 10px 8px #96749b33); }
+@keyframes petBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.pet-meter { display: flex; gap: 10px; align-items: center; margin: 11px 0; font-size: 12px; }
+.pet-meter span:first-child { width: 85px; color: var(--muted); font-weight: 600; }
+.pet-meter .progress { flex: 1; }
+.action-fx { position: absolute; inset: 0; pointer-events: none; z-index: 5; display: grid; place-items: center; font-size: 46px; opacity: 0; }
+.action-fx.play { animation: fxPop 1.2s ease both; }
+@keyframes fxPop { 0% { opacity: 0; transform: translateY(20px) scale(.5); } 25% { opacity: 1; transform: scale(1.15); } 100% { opacity: 0; transform: translateY(-60px) scale(.8); } }
+
+/* Cozy Room Builder */
+.room-preview {
+ height: 315px; border-radius: 24px; position: relative; overflow: hidden;
+ background: linear-gradient(180deg, #dff2ff 0 60%, #f6dff0 60%);
+ border: 7px solid #fff; box-shadow: inset 0 0 0 1px #ead6e6;
+}
+body.dark .room-preview { border-color: #363054; }
+.room-window {
+ position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+ width: 132px; height: 100px; border: 8px solid #fff; border-radius: 65px 65px 12px 12px;
+ background: linear-gradient(#bce4fa, #fff); display: grid; place-items: center; font-size: 22px;
+}
+body.dark .room-window { border-color: #363054; background: linear-gradient(#1a2847, #2e3b66); }
+.room-floor { position: absolute; bottom: 0; width: 100%; height: 40%; background: repeating-linear-gradient(90deg, #f4cddd 0 42px, #f9e6ed 42px 84px); }
+body.dark .room-floor { background: repeating-linear-gradient(90deg, #32284a 0 42px, #29213d 42px 84px); }
+.room-placed {
+ position: absolute; bottom: 34px; left: 0; width: 100%; padding: 0 18px;
+ display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; align-items: flex-end; z-index: 3;
+}
+.room-pet-guest {
+ position: absolute; bottom: 26px; right: 18px; width: 92px; height: 92px; z-index: 4;
+ animation: petBounce 2.6s ease-in-out infinite; pointer-events: none;
+}
+.room-furniture-chip {
+ font-size: 40px; background: #ffffffb8; border: 1px solid #fff; border-radius: 16px;
+ padding: 4px 9px; box-shadow: 0 6px 14px #7b5ea722; transition: .2s;
+}
+.room-furniture-chip:hover { transform: scale(1.12); background: #ffe4f1; }
+
+/* Café & Mini Games */
+.cafe-counter { background: linear-gradient(140deg, #fff0e6, #ffeaf4); border-radius: 20px; padding: 20px; text-align: center; }
+body.dark .cafe-counter { background: linear-gradient(140deg, #3a2638, #282745); }
+.drink { font-size: 74px; }
+.menu-option { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.menu-option button { border: 1px solid var(--line); background: var(--input-bg); border-radius: 99px; padding: 8px 13px; font-size: 12px; color: var(--heading); }
+.menu-option button.selected { background: #fce6f2; border-color: var(--pink); font-weight: 700; }
+body.dark .menu-option button.selected { background: #42284a; }
+
+.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; max-width: 400px; margin: 14px auto; }
+.memory-tile {
+ aspect-ratio: 1; border: 0; border-radius: 17px;
+ background: linear-gradient(145deg, #f3c6df, #c8e2ff);
+ color: white; font-size: 25px; display: grid; place-items: center;
+ box-shadow: 0 5px 0 #b8a3d4; transition: .2s;
+}
+.memory-tile.flipped { background: var(--input-bg); color: var(--heading); border: 1px solid var(--line); box-shadow: none; }
+.memory-tile.matched { background: #dff5ea; color: #4c8c6e; box-shadow: none; }
+.quiz-option { display: block; width: 100%; margin: 8px 0; text-align: left; border: 1px solid var(--line); background: var(--input-bg); border-radius: 14px; padding: 12px; color: var(--ink); font-size: 13px; }
+.quiz-option:hover { border-color: var(--pink); background: #fff0f7; }
+body.dark .quiz-option:hover { background: #372545; }
+
+/* Cute Custom Cake Game */
+.cake-layout { display: grid; grid-template-columns: minmax(300px, .95fr) minmax(0, 1.05fr); gap: 20px; align-items: start; }
+.cake-preview-card { position: sticky; top: 75px; text-align: center; }
+.cake-stage {
+ position: relative; min-height: 360px; border-radius: 28px;
+ padding: 20px 14px 28px; display: flex; flex-direction: column;
+ align-items: center; justify-content: flex-end; gap: 0;
+ background: radial-gradient(ellipse at 50% 35%, #fff 0, #fff4fa 45%, #f2e8ff 78%, #e2f1ff 100%);
+ border: 1px solid var(--line); box-shadow: inset 0 0 0 7px #ffffff70; overflow: hidden;
+}
+body.dark .cake-stage {
+ background: radial-gradient(ellipse at 50% 35%, #3f2b52 0, #252242 62%, #192944 100%);
+ box-shadow: inset 0 0 0 7px #ffffff12;
+}
+.cake-topper-zone {
+ display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; align-items: flex-end;
+ min-height: 44px; z-index: 4; margin-bottom: -6px;
+}
+.cake-topper-item {
+ font-size: 32px; line-height: 1; cursor: pointer; position: relative;
+ filter: drop-shadow(0 4px 6px #6a4c9333);
+ transition: transform .18s ease;
+ animation: cakeDropLand .56s cubic-bezier(0.25, 1.32, 0.35, 1) both;
+}
+.cake-topper-item:hover { transform: scale(1.2) rotate(-6deg); }
+.cake-topper-item.land-puff::after {
+ content: "✦";
+ position: absolute;
+ bottom: -6px;
+ left: 50%;
+ transform: translateX(-50%);
+ font-size: 15px;
+ color: #ff85b8;
+ animation: puffFade .58s ease forwards;
+ pointer-events: none;
+}
+@keyframes cakeDropLand {
+ 0% { opacity: 0; transform: translateY(-165px) scale(0.72, 1.18) rotate(-18deg); }
+ 62% { opacity: 1; transform: translateY(6px) scale(1.16, 0.84) rotate(5deg); }
+ 80% { transform: translateY(-5px) scale(0.96, 1.05) rotate(-2deg); }
+ 100% { opacity: 1; transform: translateY(0) scale(1, 1) rotate(0deg); }
+}
+@keyframes puffFade {
+ 0% { opacity: .95; transform: translateX(-50%) translateY(0) scale(.7); }
+ 100% { opacity: 0; transform: translateX(-50%) translateY(-14px) scale(1.5); }
+}
+.cake-stage.frosting-squish .cake-tier-top {
+ animation: tierSquishTop .44s ease;
+}
+.cake-stage.frosting-squish .cake-tier-bottom {
+ animation: tierSquishBot .48s ease;
+}
+@keyframes tierSquishTop {
+ 0%, 100% { transform: scaleX(1) scaleY(1); }
+ 45% { transform: scaleX(1.055) scaleY(0.91); }
+}
+@keyframes tierSquishBot {
+ 0%, 100% { transform: scaleX(1) scaleY(1); }
+ 50% { transform: scaleX(1.04) scaleY(0.94); }
+}
+@keyframes cakePop { 0% { transform: scale(.7); } 65% { transform: scale(1.12); } 100% { transform: scale(1); } }
+
+.cake-tier-top {
+ width: 146px; height: 54px; border-radius: 22px 22px 12px 12px;
+ position: relative; z-index: 3; border: 2px solid #ffffffc8;
+ box-shadow: 0 5px 12px #7b5ea722;
+ display: flex; align-items: center; justify-content: space-around; padding: 0 10px;
+}
+.cake-frosting-drip {
+ position: absolute; top: 0; left: 0; right: 0; height: 24px;
+ border-radius: 20px 20px 12px 12px; opacity: .92;
+ pointer-events: none;
+}
+.cake-tier-bottom {
+ width: 204px; height: 68px; border-radius: 16px 16px 22px 22px;
+ position: relative; z-index: 2; margin-top: -6px;
+ border: 2px solid #ffffffc8; box-shadow: 0 8px 18px #7b5ea729;
+ display: flex; align-items: center; justify-content: space-evenly; padding: 0 12px;
+}
+.cake-plate {
+ width: 248px; height: 20px; border-radius: 99px; margin-top: -2px; z-index: 1;
+ background: linear-gradient(180deg, #ffffff, #e6eefc);
+ border: 1.5px solid var(--line); box-shadow: 0 10px 20px #6a4c932b;
+}
+.cake-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 14px; }
+.cake-tabs button {
+ border: 1px solid var(--line); background: var(--input-bg); border-radius: 99px;
+ padding: 8px 12px; color: var(--heading); font-size: 11.5px; font-weight: 700;
+}
+.cake-tabs button.active { background: linear-gradient(135deg, #ec7db4, #7bb6fa); color: #fff; border-color: transparent; }
+.cake-wardrobe { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; max-height: 360px; overflow-y: auto; padding-right: 4px; }
+.cake-choice {
+ min-height: 92px; border: 1px solid var(--line); background: var(--input-bg);
+ border-radius: 17px; padding: 9px 6px; display: flex; flex-direction: column;
+ align-items: center; justify-content: center; gap: 4px; transition: .2s;
+}
+.cake-choice .choice-swatch {
+ width: 34px; height: 22px; border-radius: 9px; border: 2px solid #fff;
+ box-shadow: 0 3px 8px #0002; display: grid; place-items: center; font-size: 16px;
+}
+.cake-choice .choice-emoji { font-size: 26px; }
+.cake-choice .choice-name { font-size: 10.5px; font-weight: 700; color: var(--heading); text-align: center; }
+.cake-choice.selected { border: 2px solid #e076b0; background: #fff0f7; transform: scale(1.03); }
+body.dark .cake-choice.selected { background: #3b264a; }
+@media(max-width: 650px) {
+ .cake-layout { grid-template-columns: 1fr; }
+ .cake-preview-card { position: static; }
+}
+
+/* Aesthetic Customizable Polaroid Wall */
+.polaroid-toolbar {
+ display: flex; gap: 8px; flex-wrap: wrap; justify-content: space-between;
+ align-items: center; margin-top: 16px; padding: 10px 14px;
+ background: var(--card-bg); border: 1px solid var(--line); border-radius: 18px;
+}
+.polaroid-grid {
+ display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+ gap: 18px; margin-top: 18px; align-items: start; grid-auto-flow: dense;
+}
+.polaroid-grid.layout-masonry {
+ display: block; column-count: 4; column-gap: 18px;
+}
+.polaroid-grid.layout-masonry .polaroid {
+ break-inside: avoid; margin-bottom: 18px; display: inline-block; width: 100%;
+}
+.polaroid {
+ background: #ffffff; padding: 11px 11px 14px; border-radius: 14px;
+ box-shadow: 0 12px 28px #79658a22; border: 1px solid #f0e6f6;
+ position: relative; transition: transform .28s ease, box-shadow .28s ease; cursor: pointer;
+}
+.polaroid.size-sm { grid-column: span 1; }
+.polaroid.size-md { grid-column: span 1; }
+.polaroid.size-lg { grid-column: span 2; }
+.polaroid.size-sm .polaroid-media { aspect-ratio: 4/3; font-size: 40px; }
+.polaroid.size-md .polaroid-media { aspect-ratio: 1/1; font-size: 54px; }
+.polaroid.size-lg .polaroid-media { aspect-ratio: 16/11; font-size: 68px; }
+
+.polaroid-grid.layout-scrapbook .polaroid:nth-child(odd) { transform: rotate(-1.8deg); }
+.polaroid-grid.layout-scrapbook .polaroid:nth-child(even) { transform: rotate(1.6deg) translateY(6px); }
+.polaroid-grid.layout-scrapbook .polaroid:nth-child(3n) { transform: rotate(-0.8deg) translateY(-4px); }
+.polaroid:hover { transform: translateY(-6px) rotate(0deg) scale(1.02) !important; z-index: 6; box-shadow: 0 18px 36px #79658a30; }
+
+.polaroid-tape {
+ position: absolute; top: -9px; left: 50%; transform: translateX(-50%) rotate(-2deg);
+ width: 64px; height: 18px; background: #ffd1e6cc; border-radius: 3px;
+ box-shadow: 0 1px 4px #0001; pointer-events: none; z-index: 2;
+}
+.polaroid.blue-frame .polaroid-tape { background: #bde0fecc; transform: translateX(-50%) rotate(2deg); }
+
+.polaroid.pink-frame { background: #ffe6f2; border-color: #f9c4df; }
+.polaroid.blue-frame { background: #e3f1ff; border-color: #bddcff; }
+.polaroid.lavender-frame { background: #f2e8ff; border-color: #dcc2ff; }
+body.dark .polaroid { background: #262340; border-color: #3a355c; }
+body.dark .polaroid.pink-frame { background: #3d2238; border-color: #5e3356; }
+body.dark .polaroid.blue-frame { background: #1c314d; border-color: #2c4d78; }
+body.dark .polaroid.lavender-frame { background: #31244d; border-color: #4f3a7a; }
+
+.polaroid-media {
+ aspect-ratio: 1; border-radius: 9px; overflow: hidden;
+ background: linear-gradient(135deg, #ffe4ef, #e7e0ff);
+ display: grid; place-items: center; font-size: 54px;
+}
+.polaroid-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.polaroid-cap-input {
+ font-family: 'Caveat', cursive; font-size: 21px; color: var(--heading);
+ text-align: center; margin-top: 8px; border: 0; background: transparent;
+ width: 100%; padding: 2px 4px;
+}
+.polaroid-date { display: block; text-align: center; font-size: 10px; color: var(--muted); }
+.polaroid-tools { position: absolute; top: 14px; right: 14px; display: flex; gap: 4px; z-index: 3; opacity: .92; }
+.polaroid-move-bar {
+ display: flex; justify-content: center; gap: 5px; margin-top: 6px;
+}
+.p-tool {
+ min-width: 24px; height: 24px; padding: 0 6px; border-radius: 99px; border: 0;
+ background: var(--pill-bg); color: var(--deep); font-size: 10.5px; font-weight: 700;
+ display: grid; place-items: center; box-shadow: 0 2px 6px #0003;
+}
+.p-tool:hover { background: var(--pink); color: #fff; }
+@media(max-width: 720px) {
+ .polaroid-grid.layout-masonry { column-count: 2; }
+ .polaroid.size-lg { grid-column: span 1; }
+}
+
+/* Lightbox */
+.lightbox {
+ position: fixed; inset: 0; z-index: 400; background: #120f24d4;
+ backdrop-filter: blur(8px); display: none; place-items: center; padding: 20px;
+}
+.lightbox.open { display: grid; }
+.lightbox-card {
+ background: var(--card-bg); border: 1px solid var(--line); border-radius: 24px;
+ padding: 16px; max-width: min(92vw, 540px); text-align: center; position: relative;
+}
+.lightbox-card img { max-width: 100%; max-height: 68vh; border-radius: 14px; display: block; margin: auto; }
+.lightbox-emoji { font-size: 120px; padding: 30px 60px; }
+.lightbox-caption { font: 700 24px 'Caveat', cursive; color: var(--heading); margin-top: 10px; }
+.lightbox-close {
+ position: absolute; top: -12px; right: -12px; width: 34px; height: 34px;
+ border-radius: 50%; border: 0; background: var(--pink); color: #fff; font-weight: bold;
+}
+
+/* Multi-Spotify List */
+.spotify-list { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+.spotify-card { position: relative; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--input-bg); }
+.spotify-del {
+ position: absolute; top: 8px; right: 8px; z-index: 5; width: 26px; height: 26px;
+ border-radius: 50%; border: 0; background: #1e1b33cc; color: #fff; font-size: 13px;
+}
+
+/* Mood & Diary */
+.mood-btn { font-size: 28px; border: 1px solid var(--line); background: var(--input-bg); border-radius: 16px; padding: 11px 14px; transition: .2s; }
+.mood-btn.selected { background: #fce6f2; border-color: var(--pink); transform: scale(1.08); }
+body.dark .mood-btn.selected { background: #3e274a; }
+.diary-entry { border-bottom: 1px solid var(--line); padding: 12px 0; }
+.diary-entry strong { color: var(--heading); }
+
+/* Floating Interactive Mochi Bunny Companion */
+.floating-mochi {
+ position: fixed; right: 16px; bottom: 16px; z-index: 120;
+ display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+}
+.mochi-bubble {
+ background: var(--card-bg); color: var(--ink); border: 1.5px solid var(--line);
+ padding: 9px 14px; border-radius: 18px 18px 4px 18px; font-size: 12px; font-weight: 600;
+ max-width: 225px; box-shadow: var(--shadow); opacity: 0; transform: translateY(6px);
+ transition: opacity .3s, transform .3s; pointer-events: none;
+}
+.mochi-bubble.show { opacity: 1; transform: translateY(0); }
+.mochi-body-wrap { position: relative; display: flex; align-items: center; gap: 6px; }
+.mochi-avatar-btn {
+ width: 74px; height: 84px; padding: 0; border: 0; background: transparent;
+ filter: drop-shadow(0 8px 14px #7b5ea72e);
+ animation: bunnyFloat 3.4s ease-in-out infinite;
+}
+.mochi-avatar-btn:hover { transform: scale(1.07); }
+@keyframes bunnyFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+.bunny-ear-l { transform-origin: 36px 46px; animation: earTiltL 4.2s ease-in-out infinite; }
+.bunny-ear-r { transform-origin: 64px 46px; animation: earTiltR 4.2s ease-in-out infinite; }
+@keyframes earTiltL { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-6deg); } }
+@keyframes earTiltR { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(6deg); } }
+.mochi-controls { display: flex; gap: 5px; }
+.mochi-chip {
+ background: var(--pill-bg); border: 1px solid var(--line); border-radius: 99px;
+ padding: 4px 9px; font-size: 11px; color: var(--heading); font-weight: 700;
+}
+.mochi-chip:hover { background: var(--hover-pill); }
+.floating-mochi.minimized .mochi-avatar-btn,
+.floating-mochi.minimized .mochi-bubble,
+.floating-mochi.minimized .mochi-chip:not(#mochiToggleBtn) { display: none; }
+
+footer { text-align: center; color: var(--muted); font-size: 11.5px; padding: 26px 12px 45px; }
+
+@media(max-width: 850px) {
+ .world-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .hero.game-banner { margin: 14px; padding: 0 20px; grid-template-columns: 1fr .8fr; }
+ .home-lower { grid-template-columns: 1fr; }
+}
+@media(max-width: 650px) {
+ .hero.game-banner { grid-template-columns: 1fr; margin: 10px; padding: 0 18px; }
+ .banner-art { min-height: 220px; }
+ .banner-princess { width: 165px; height: 225px; left: 22%; bottom: 12px; }
+ .banner-pet-svg { width: 82px; height: 82px; bottom: 16px; }
+ .dress-layout { grid-template-columns: 1fr; }
+ .dress-preview-card { position: static; }
+ .dress-stage { min-height: 410px; }
+ #princessArt { height: 340px; }
+ .arcade-subtabs { border-radius: 22px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+<div class="ambient-layer" id="ambientLayer"></div>
+<div class="sparkle" style="top:16%;left:4%">✧</div>
+<div class="sparkle" style="top:38%;right:6%;animation-delay:2s">♡</div>
+<div class="sparkle" style="top:74%;left:7%;animation-delay:1s">✿</div>
+
+<header class="topbar">
+ <div class="brand" onclick="showPage('home')">little world <span>universe ♡</span></div>
+ <div class="top-actions">
+  <span class="pill" id="coinDisplay">♡ 0 coins</span>
+  <button class="pill" onclick="triggerMagicBurst()" title="Magic Sparkle Burst">✨ magic</button>
+  <select class="pill" id="cursorSelect" title="Cursor Trail" style="padding:6px 10px">
+   <option value="stars">✧ sparkle</option>
+   <option value="hearts">♡ hearts</option>
+   <option value="bubbles">🫧 bubbles</option>
+  </select>
+  <button class="pill" onclick="toggleSound()" id="soundBtn" aria-pressed="false">♫ music off</button>
+  <button class="pill" onclick="toggleTheme()" id="themeBtn">☾ theme</button>
+ </div>
+</header>
+
+<section class="hero game-banner">
+ <div class="banner-copy">
+  <div class="eyebrow">✦ welcome to your dreamy little world ✦</div>
+  <h1>Little World<br><em>Universe</em></h1>
+  <p id="heroGreeting">Dress your princess, care for your cutest pets, decorate your cozy room, and collect little memories every day.</p>
+  <div class="banner-actions">
+   <button class="btn" onclick="openGamesTab('dress')">Play dress up ✧</button>
+   <button class="btn secondary" onclick="openGamesTab('pet')">Meet your pet ♡</button>
+   <button class="btn secondary" onclick="openGamesTab('room')">My Room 🏡</button>
+  </div>
+  <div class="hero-stats">
+   <div class="stat"><strong id="heroCoins">0</strong><small>♡ coins</small></div>
+   <div class="stat"><strong id="heroLevel">1</strong><small>✧ level</small></div>
+   <div class="stat"><strong id="heroPet">🐰</strong><small id="homePetText">Mochi</small></div>
+  </div>
+ </div>
+ <div class="banner-art">
+  <div class="banner-cloud cloud-one">☁</div>
+  <div class="banner-cloud cloud-two">☁</div>
+  <div class="banner-sparkle">✦　✧　♡</div>
+  <svg id="homePrincessArt" class="banner-princess" viewBox="0 0 300 410" aria-label="Princess character"></svg>
+  <svg id="homePetArt" class="banner-pet-svg" viewBox="0 0 240 220" aria-label="Adopted pet"></svg>
+  <div class="banner-flower flower-one">🌷</div>
+  <div class="banner-flower flower-two">🌸</div>
+  <div class="banner-ground"></div>
+  <div class="banner-ribbon">YOUR MAGICAL DAY ♡</div>
+ </div>
+</section>
+
+<!-- Storybook Slide / Page Navigation -->
+<div class="nav-wrapper">
+ <button class="nav-arrow" onclick="stepPage(-1)" title="Halaman Sebelumnya (←)">❮</button>
+ <nav class="nav" id="mainNav">
+  <button class="active" data-page="home">♡ Home</button>
+  <button data-page="games">🎮 Mini Games</button>
+  <button data-page="gift">🎁 Daily Gift</button>
+  <button data-page="gallery">📷 Polaroids</button>
+  <button data-page="mood">🌷 Mood</button>
+  <button data-page="focus">⏳ Focus & Rain</button>
+  <button data-page="playlist">🎧 Spotify</button>
+  <button data-page="diary">📔 Diary</button>
+  <button data-page="capsule">💌 Capsule</button>
+  <button data-page="wishlist">🛍 Wishlist</button>
+  <button data-page="fortune">🔮 Fortune</button>
+  <button data-page="collection">🎀 Collection</button>
+  <button data-page="settings">⚙️ Settings</button>
+ </nav>
+ <button class="nav-arrow" onclick="stepPage(1)" title="Halaman Berikutnya (→)">❯</button>
+</div>
+
+<main>
+<!-- 1. HOME HUB -->
+<section class="page active" id="home">
+ <div class="home-welcome">
+  <div>
+   <span class="tag">✧ YOUR LITTLE UNIVERSE ✧</span>
+   <h2>Mau main apa hari ini?</h2>
+   <p class="muted">Pilih aktivitas seru atau gunakan tombol panah ← → untuk berpindah halaman.</p>
+  </div>
+  <div style="font-size:52px">🐇</div>
+ </div>
+ <div class="world-cards">
+  <button class="world-card world-dress" onclick="openGamesTab('dress')">
+   <span class="world-label">FASHION STUDIO</span>
+   <span class="world-art">👸🏻</span>
+   <strong>Princess Dress Up</strong>
+   <small>Atur gaya rambut, gaun, mahkota & aksesori langsung!</small>
+   <span class="world-go">MAIN SEKARANG ↗</span>
+  </button>
+  <button class="world-card world-pet" onclick="openGamesTab('pet')">
+   <span class="world-label">PET PARADISE</span>
+   <span class="world-art">🐰🐱</span>
+   <strong>Adopt & Pet Care</strong>
+   <small>Adopsi sahabat hewan, beri makan, mandi & peluk</small>
+   <span class="world-go">TEMUI MEREKA ↗</span>
+  </button>
+  <button class="world-card world-room" onclick="openGamesTab('room')">
+   <span class="world-label">DREAM HOUSE</span>
+   <span class="world-art">🏡</span>
+   <strong>Decorate My Room</strong>
+   <small>Susun furnitur & ajak hewanmu bersantai di kamar</small>
+   <span class="world-go">HIAS KAMAR ↗</span>
+  </button>
+  <button class="world-card world-games" onclick="openGamesTab('arcade')">
+   <span class="world-label">PLAYGROUND</span>
+   <span class="world-art">🧸⭐</span>
+   <strong>Mini Games & Café</strong>
+   <small>Mainkan mini-game seru, racik kopi di café & kumpulkan koin</small>
+   <span class="world-go">AYO MAIN ↗</span>
+  </button>
+ </div>
+
+ <div class="home-lower">
+  <article class="mission-card">
+   <div class="mission-icon">🎀</div>
+   <div>
+    <span class="tag">TODAY'S LITTLE MISSION</span>
+    <h3>Make today a little magical</h3>
+    <p class="muted">Check in with your mood, listen to rain sounds while focusing, or open your daily mystery gift!</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+     <button class="btn secondary" onclick="showPage('mood')">Check mood ♡</button>
+     <button class="btn secondary" onclick="showPage('gift')">Daily gift 🎁</button>
+    </div>
+   </div>
+  </article>
+  <article class="quote-card">
+   <span>“</span>
+   <p id="homeQuote">You are allowed to bloom at your own pace.</p>
+   <button class="btn secondary" onclick="newQuote()">Another reminder ✧</button>
+  </article>
+ </div>
+
+ <div class="home-progress">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+   <strong style="color:var(--heading)">Your Princess Journey</strong>
+   <small class="muted" id="levelText">0 / 100 XP to next level</small>
+  </div>
+  <div class="progress" style="margin-top:10px"><span id="levelProgress" style="width:0%"></span></div>
+ </div>
+</section>
+
+<!-- 2. MINI GAMES & PLAYGROUND HUB -->
+<section class="page" id="games">
+ <div class="section-head">
+  <div class="eyebrow">playground & cozy studio</div>
+  <h2>Mini Games & World Studio 🎮</h2>
+  <p>Semua keseruan digabung dalam satu menu utama biar simpel—pilih mode di bawah ini!</p>
+ </div>
+
+ <div class="arcade-subtabs" id="gamesSubtabs">
+  <button class="active" data-games-tab="arcade">🎮 Mini Games Arcade</button>
+  <button data-games-tab="dress">👗 Princess Dress Up</button>
+  <button data-games-tab="cake">🎂 Cake Maker</button>
+  <button data-games-tab="pet">🐾 Adopt & Pet Care</button>
+  <button data-games-tab="room">🏡 My Room</button>
+  <button data-games-tab="cafe">☕ My Little Café</button>
+  <button data-games-tab="wishwell">⛲ Wishing Well</button>
+ </div>
+
+ <!-- Sub-view A: Mini Games Arcade -->
+ <div class="arcade-panel active" id="games-panel-arcade">
+  <div class="grid">
+   <div class="card">
+    <div class="big-emoji">🧠</div>
+    <h3>Memory Match</h3>
+    <div class="memory-grid" id="memoryGrid"></div>
+    <p id="memoryStatus" style="text-align:center">Temukan semua pasangan yang cocok ♡</p>
+    <div class="btn-row"><button class="btn secondary" onclick="startMemory()">Ulangi</button></div>
+   </div>
+   <div class="card">
+    <div class="big-emoji">💌</div>
+    <h3>Kuis Kepribadian Putri</h3>
+    <p id="quizQuestion">Pilih aktivitas yang paling bikin kamu senang.</p>
+    <div id="quizOptions"></div>
+    <p id="quizResult" class="notice hidden"></p>
+    <div class="btn-row"><button class="btn secondary" onclick="startQuiz()">Ulangi kuis</button></div>
+   </div>
+   <div class="card" style="text-align:center">
+    <div class="big-emoji">⭐</div>
+    <h3>Catch the Stars</h3>
+    <div id="starGame" class="item-grid"></div>
+    <p id="starStatus" class="notice">Tangkap 8 bintang untuk +15 koin!</p>
+    <div class="btn-row"><button class="btn" onclick="startStars()">Reset Bintang</button></div>
+   </div>
+   <div class="card" style="text-align:center">
+    <div class="big-emoji">🫧</div>
+    <h3>Bubble Pop</h3>
+    <div id="bubbleGame" class="item-grid"></div>
+    <p id="bubbleStatus" class="notice">Pecahkan semua 10 gelembung pastel!</p>
+    <div class="btn-row"><button class="btn" onclick="startBubbles()">Reset Gelembung</button></div>
+   </div>
+   <div class="card" style="text-align:center">
+    <div class="big-emoji">🍓</div>
+    <h3>Feed the Pet</h3>
+    <div class="item-grid">
+     <button class="item-btn" onclick="feedMini('🍓')">🍓 Berry</button>
+     <button class="item-btn" onclick="feedMini('🥕')">🥕 Wortel</button>
+     <button class="item-btn" onclick="feedMini('🍪')">🍪 Kue</button>
+    </div>
+    <p id="feedStatus" class="notice">Peliharaanmu mau 🍓!</p>
+    <div class="btn-row"><button class="btn secondary" onclick="resetFeedMini()">Permintaan Baru</button></div>
+   </div>
+   <div class="card" style="text-align:center">
+    <div class="big-emoji">👗</div>
+    <h3>Dress Up Challenge</h3>
+    <p id="challengeTheme" class="notice">Tema hari ini: Fairy Garden</p>
+    <div class="btn-row">
+     <button class="btn" onclick="openGamesTab('dress')">Buka Dress Up</button>
+     <button class="btn secondary" onclick="completeChallenge()">Kirim Look</button>
+    </div>
+   </div>
+   <div class="card" style="text-align:center">
+    <div class="big-emoji">🎂</div>
+    <h3>Custom Kue Lucu</h3>
+    <p class="muted" style="margin:0 0 10px">Racik base, frosting & beragam topping sesuai kreasimu!</p>
+    <div class="cake-stage" id="cakeStage">
+     <div class="cake-toppings-row" id="cakeToppingsLayer" title="Klik topping untuk melepasnya">🍓 ✨ 🎀</div>
+     <div class="cake-visual" id="cakeBaseVisual">🍰</div>
+     <div class="cake-plate"></div>
+    </div>
+    <label style="text-align:left">Base & Frosting</label>
+    <div class="menu-option" id="cakeBaseChoices">
+     <button class="selected" data-base="🍰" data-frost="Pink Berry" onclick="setCakeBase(this)">🍰 Strawberry</button>
+     <button data-base="🧁" data-frost="Cotton Candy" onclick="setCakeBase(this)">🧁 Cupcake</button>
+     <button data-base="🎂" data-frost="Dreamy Cream" onclick="setCakeBase(this)">🎂 Birthday</button>
+     <button data-base="🍫" data-frost="Choco Velvet" onclick="setCakeBase(this)">🍫 Choco</button>
+    </div>
+    <label style="text-align:left">Tambah Topping (bisa banyak & custom)</label>
+    <div class="menu-option" id="cakeToppingChoices">
+     <button onclick="addCakeTopping('🍓')">🍓 Berry</button>
+     <button onclick="addCakeTopping('🍒')">🍒 Cherry</button>
+     <button onclick="addCakeTopping('🍡')">🍡 Mochi</button>
+     <button onclick="addCakeTopping('✨')">✨ Sparkle</button>
+     <button onclick="addCakeTopping('🎀')">🎀 Ribbon</button>
+     <button onclick="addCakeTopping('🦋')">🦋 Butterfly</button>
+     <button onclick="addCakeTopping('🍭')">🍭 Candy</button>
+     <button onclick="addCakeTopping('🌼')">🌼 Daisy</button>
+    </div>
+    <div class="btn-row">
+    <button class="btn" onclick="openGamesTab('dress')">Buka Dress Up</button>
+    <button class="btn secondary" onclick="completeChallenge()">Kirim Look</button>
+   </div>
+  </div>
+ </div>
+ </div>
+
+ <!-- Sub-view B: Princess Dress Up Studio -->
+ <div class="arcade-panel" id="games-panel-dress">
+  <div class="dress-layout">
+   <div class="card dress-preview-card">
+    <div class="princess-selector" id="princessChoices">
+     <button class="princess-pill selected" onclick="selectPrincess('luna')">🌙 Luna</button>
+     <button class="princess-pill" onclick="selectPrincess('flora')">🌷 Flora</button>
+     <button class="princess-pill" onclick="selectPrincess('aria')">🫧 Aria</button>
+    </div>
+    <div class="dress-stage">
+     <svg id="princessArt" viewBox="0 0 300 410" role="img" aria-label="Princess preview"></svg>
+     <div class="dress-caption" id="dressCaption">Rose Garden Gown</div>
+    </div>
+    <div class="btn-row">
+     <button class="btn" onclick="randomOutfit()">✧ Makeover Acak</button>
+     <button class="btn secondary" onclick="resetDress()">↺ Reset Look</button>
+    </div>
+   </div>
+   <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+     <h3>Rakit gaya putrimu</h3>
+     <span class="tag" id="dressCount">6 kategori</span>
+    </div>
+    <div class="dress-tabs" id="dressTabs">
+     <button class="active" data-dress-tab="outfits">👗 Outfits</button>
+     <button data-dress-tab="hair">💇 Hair</button>
+     <button data-dress-tab="crowns">👑 Headwear</button>
+     <button data-dress-tab="shoes">👠 Shoes</button>
+     <button data-dress-tab="makeup">💄 Makeup</button>
+     <button data-dress-tab="extras">💍 Extras</button>
+    </div>
+    <div id="dressWardrobe"></div>
+    <div class="notice">Setiap pilihan langsung muncul di karakter Putri di sini maupun di banner beranda ♡</div>
+   </div>
+  </div>
+ </div>
+
+ <!-- Sub-view B2: Cute Cake Maker Studio (Play Store Style) -->
+ <div class="arcade-panel" id="games-panel-cake">
+  <div class="cake-layout">
+   <div class="card cake-preview-card">
+    <div class="cake-stage" id="cakeStage">
+     <div class="cake-topper-zone" id="cakeTopperZone" title="Klik hiasan untuk melepas"></div>
+     <div class="cake-tier-top" id="cakeTierTop">
+      <div class="cake-frosting-drip" id="cakeFrostingTop"></div>
+     </div>
+     <div class="cake-tier-bottom" id="cakeTierBottom">
+      <div class="cake-frosting-drip" id="cakeFrostingBottom"></div>
+     </div>
+     <div class="cake-plate"></div>
+    </div>
+    <div class="dress-caption" style="position:static;display:inline-block;margin-top:12px" id="cakeCaption">Strawberry Dream Cake</div>
+    <div class="btn-row">
+     <button class="btn" onclick="serveCustomCake()">🍰 Sajikan Kue (+12 ♡)</button>
+     <button class="btn secondary" onclick="randomCakeDesign()">✨ Acak Kue</button>
+     <button class="btn secondary" onclick="resetCakeDesign()">↺ Reset</button>
+    </div>
+    <p id="cakeStatus" class="notice">Pilih kategori di samping untuk meracik kue impianmu! Klik hiasan di atas kue untuk melepasnya.</p>
+   </div>
+   <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+     <h3>Cake Maker Studio</h3>
+     <span class="tag" id="cakeToppingCounter">0 toppings</span>
+    </div>
+    <div class="cake-tabs" id="cakeTabs">
+     <button class="active" data-cake-tab="sponge">🍰 Sponge</button>
+     <button data-cake-tab="frosting">🍨 Frosting</button>
+     <button data-cake-tab="drizzle">🍯 Drizzle</button>
+     <button data-cake-tab="toppers">🕯️ Toppers</button>
+     <button data-cake-tab="fruits">🍓 Fruits & Sweets</button>
+     <button data-cake-tab="charms">🎀 Cute Charms</button>
+    </div>
+    <div id="cakeWardrobe"></div>
+    <div class="notice">Tips: Kamu bisa menumpuk berbagai topping, lilin, dan charm di atas kue lalu menyajikannya untuk dapat koin ♡</div>
+   </div>
+  </div>
+ </div>
+
+ <!-- Sub-view C: Adopt a Pet & Pet Care Studio -->
+ <div class="arcade-panel" id="games-panel-pet">
+  <div class="grid">
+   <div class="card">
+    <div class="pet-stage">
+     <div class="action-fx" id="petActionFx"></div>
+     <svg id="petArt" viewBox="0 0 240 220"></svg>
+     <h3 id="petName">Mochi</h3>
+     <span class="tag" id="petMood">ceria & menggemaskan ♡</span>
+    </div>
+    <div class="pet-meter"><span>🍓 Lapar</span><div class="progress"><span id="hungerBar" style="width:75%"></span></div><b id="hungerVal">75</b></div>
+    <div class="pet-meter"><span>💗 Senang</span><div class="progress"><span id="happyBar" style="width:80%"></span></div><b id="happyVal">80</b></div>
+    <div class="pet-meter"><span>✨ Bersih</span><div class="progress"><span id="cleanBar" style="width:85%"></span></div><b id="cleanVal">85</b></div>
+    <div class="pet-meter"><span>⚡ Energi</span><div class="progress"><span id="energyBar" style="width:80%"></span></div><b id="energyVal">80</b></div>
+    <div class="btn-row">
+     <button class="btn" onclick="carePet('feed')">🍓 Feed</button>
+     <button class="btn secondary" onclick="carePet('play')">🧸 Play</button>
+     <button class="btn secondary" onclick="carePet('bath')">🫧 Bath</button>
+     <button class="btn secondary" onclick="carePet('groom')">🪮 Groom</button>
+     <button class="btn secondary" onclick="carePet('sleep')">🌙 Sleep</button>
+     <button class="btn secondary" onclick="carePet('hug')">🤗 Hug</button>
+    </div>
+    <p id="careMessage" class="muted" style="text-align:center;margin-top:10px">Peliharaanmu siap disayang!</p>
+   </div>
+   <div class="card">
+    <h3>Pilih sahabat hewanmu</h3>
+    <div class="item-grid" id="petChoices">
+     <button class="item-btn selected" onclick="adoptPet('🐰','Mochi')">🐰<br>Bunny</button>
+     <button class="item-btn" onclick="adoptPet('🐱','Mimi')">🐱<br>Kitty</button>
+     <button class="item-btn" onclick="adoptPet('🐻','Boba')">🐻<br>Bear</button>
+     <button class="item-btn" onclick="adoptPet('🐶','Cookie')">🐶<br>Puppy</button>
+     <button class="item-btn" onclick="adoptPet('🦊','Peach')">🦊<br>Fox</button>
+     <button class="item-btn" onclick="adoptPet('🐼','Panda')">🐼<br>Panda</button>
+     <button class="item-btn" onclick="adoptPet('🐹','Pip')">🐹<br>Hamster</button>
+     <button class="item-btn" onclick="adoptPet('🦆','Daisy')">🦆<br>Duck</button>
+     <button class="item-btn" onclick="adoptPet('🦌','Clover')">🦌<br>Deer</button>
+     <button class="item-btn" onclick="adoptPet('🦄','Twinkle')">🦄<br>Unicorn</button>
+    </div>
+    <label>Beri nama peliharaanmu</label>
+    <input id="petNameInput" maxlength="18" placeholder="Contoh: Mochi">
+    <div class="btn-row"><button class="btn" onclick="renamePet()">Simpan nama ♡</button></div>
+   </div>
+  </div>
+ </div>
+
+ <!-- Sub-view D: My Room -->
+ <div class="arcade-panel" id="games-panel-room">
+  <div class="grid">
+   <div class="card">
+    <div id="roomPreview" class="room-preview">
+     <div class="room-window" id="roomWindow">☁️ ✨ ☁️</div>
+     <div class="room-floor" id="roomFloor"></div>
+     <div id="roomPlaced" class="room-placed"></div>
+     <svg id="roomPetGuest" class="room-pet-guest" viewBox="0 0 240 220"></svg>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;flex-wrap:wrap;gap:8px">
+     <div>
+      <h3 style="margin:0" id="roomThemeLabel">Pastel Cloud Room</h3>
+      <small class="muted">Klik furnitur di dalam kamar untuk melepasnya</small>
+     </div>
+     <div class="btn-row" style="margin:0">
+      <button class="btn secondary" onclick="cycleRoomTheme()">Wallpaper 🎨</button>
+      <button class="btn" onclick="shuffleRoom()">Acak ✨</button>
+     </div>
+    </div>
+   </div>
+   <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+     <h3>Toko Furnitur & Dekorasi</h3>
+     <span class="tag" id="decorOwned">4 dimiliki</span>
+    </div>
+    <div id="decorShop" class="item-grid" style="max-height:310px;overflow-y:auto;padding-right:4px"></div>
+   </div>
+  </div>
+ </div>
+
+ <!-- Sub-view E: My Little Café -->
+ <div class="arcade-panel" id="games-panel-cafe">
+  <div class="grid">
+   <div class="card">
+    <div class="cafe-counter">
+     <div class="drink" id="drinkPreview">🧋 🧋</div>
+     <h3 id="drinkName">Strawberry Milk Tea</h3>
+     <p id="drinkDescription">Dibuat dengan pearls dan penuh cinta ♡</p>
+    </div>
+    <label>Pilih minuman</label>
+    <div class="menu-option" id="drinkChoices">
+     <button class="selected" data-drink="🧋" data-name="Strawberry Milk Tea">🧋 Milk Tea</button>
+     <button data-drink="🍓" data-name="Strawberry Smoothie">🍓 Smoothie</button>
+     <button data-drink="☕" data-name="Vanilla Latte">☕ Latte</button>
+     <button data-drink="🍵" data-name="Matcha Cloud">🍵 Matcha</button>
+    </div>
+    <label>Pilih topping</label>
+    <div class="menu-option" id="toppingChoices">
+     <button class="selected" data-topping="🧋" data-topname="Pearls">🧋 Pearls</button>
+     <button data-topping="🍡" data-topname="Mochi">🍡 Mochi</button>
+     <button data-topping="🍒" data-topname="Cherry">🍒 Cherry</button>
+     <button data-topping="🍦" data-topname="Cream">🍦 Cream</button>
+    </div>
+    <div class="btn-row"><button class="btn" onclick="serveDrink()">Sajikan ke pelanggan ♡</button></div>
+   </div>
+   <div class="card" style="text-align:center">
+    <h3>Pelanggan Hari Ini</h3>
+    <div class="big-emoji" id="customerEmoji">🐻</div>
+    <p id="customerOrder">Beruang kecil ingin minuman manis!</p>
+    <div class="notice" id="cafeFeedback">Sajikan minuman pertamamu untuk dapat koin!</div>
+    <div class="divider"></div>
+    <p><strong id="cafeEarned">0</strong> koin terkumpul dari café ♡</p>
+   </div>
+  </div>
+ </div>
+
+ <!-- Sub-view F: Magical Wishing Well -->
+ <div class="arcade-panel" id="games-panel-wishwell">
+  <div class="card" style="max-width:560px;margin:auto;text-align:center">
+   <div class="big-emoji" id="wellEmoji" style="font-size:74px">⛲</div>
+   <h3>Magical Wishing Well ✨</h3>
+   <p>Lempar <strong>5 coins</strong> ke sumur harapan untuk memanggil kejutan XP, koin keberuntungan, atau pesan semesta!</p>
+   <div class="notice" id="wellResult">Ketuk tombol di bawah untuk melempar koin harapanmu ♡</div>
+   <div class="btn-row">
+    <button class="btn" onclick="tossWishCoin()">🪙 Lempar 5 Coins</button>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 3. DAILY GIFT -->
+<section class="page" id="gift">
+ <div class="section-head">
+  <div class="eyebrow">a little something for you</div>
+  <h2>Daily Mystery Gift 🎁</h2>
+  <p>Buka kotak kejutan harianmu untuk mendapatkan koin dan koleksi imut!</p>
+ </div>
+ <div class="card" style="max-width:560px;margin:auto;text-align:center">
+  <div class="big-emoji" id="giftBox" style="font-size:84px">🎁</div>
+  <h3 id="giftTitle">Sebuah kejutan menantimu...</h3>
+  <p id="giftDescription">Ketuk tombol di bawah untuk membuka hadiah hari ini.</p>
+  <button class="btn" id="giftButton" onclick="openGift()">Buka Hadiahku ♡</button>
+  <div class="divider"></div>
+  <div class="item-grid" id="giftCollection"></div>
+ </div>
+</section>
+
+<!-- 4. POLAROID GALLERY -->
+<section class="page" id="gallery">
+ <div class="section-head">
+  <div class="eyebrow">little moments, forever memories</div>
+  <h2>Polaroid Wall & Studio 📷</h2>
+  <p>Upload foto asli lengkap dengan caption, atur ukuran (S / M / L), geser posisi letak foto, dan pilih gaya dinding estetik!</p>
+ </div>
+ <div class="card" style="max-width:820px;margin:auto">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;align-items:end">
+   <div>
+    <label style="margin-top:0">1. Tulis Caption Foto Dulu ♡</label>
+    <input id="photoUploadCaption" placeholder="Contoh: Sunset sore yang manis ✨">
+   </div>
+   <div>
+    <label style="margin-top:0">2. Warna Bingkai & Ukuran Awal</label>
+    <div style="display:flex;gap:6px">
+     <select id="photoUploadFrame">
+      <option value="pink-frame">🌸 Pink Pastel</option>
+      <option value="blue-frame">🩵 Sky Blue</option>
+      <option value="lavender-frame">💜 Lavender</option>
+      <option value="">🤍 Classic White</option>
+     </select>
+     <select id="photoUploadSize" style="width:92px">
+      <option value="md">Size M</option>
+      <option value="lg">Size L</option>
+      <option value="sm">Size S</option>
+     </select>
+    </div>
+   </div>
+   <div>
+    <label class="btn" style="margin:0;cursor:pointer;display:block;text-align:center">📸 Pilih & Upload Foto
+     <input id="photoFileInput" type="file" accept="image/*" multiple style="display:none">
+    </label>
+   </div>
+  </div>
+
+  <div class="divider"></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+   <span class="muted">Atau buat kartu simbol:</span>
+   <select id="galleryEmoji" style="width:auto">
+    <option value="🌸">🌸 Sakura</option>
+    <option value="🎀">🎀 Ribbon</option>
+    <option value="☁️">☁️ Cloud</option>
+    <option value="🧸">🧸 Teddy</option>
+    <option value="🍓">🍓 Berry</option>
+    <option value="💗">💗 Heart</option>
+    <option value="🌷">🌷 Tulip</option>
+   </select>
+   <input id="galleryCaption" placeholder="Caption kartu simbol..." style="flex:1;min-width:160px">
+   <button class="btn secondary" onclick="addEmojiGallery()">Tambah Kartu ♡</button>
+  </div>
+ </div>
+
+ <div class="polaroid-toolbar" style="max-width:1100px;margin:18px auto 0">
+  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+   <strong style="font-size:12px;color:var(--heading)">Gaya Tata Letak:</strong>
+   <button class="pill" id="layoutScrapbookBtn" onclick="setPolaroidLayout('scrapbook')">✨ Scrapbook Miring</button>
+   <button class="pill" id="layoutGridBtn" onclick="setPolaroidLayout('grid')">▦ Grid Rapi</button>
+   <button class="pill" id="layoutMasonryBtn" onclick="setPolaroidLayout('masonry')">🧱 Kolase Estetik</button>
+  </div>
+  <span class="muted" id="polaroidCountLabel">0 kenangan tersimpan</span>
+ </div>
+
+ <div class="polaroid-grid layout-scrapbook" id="galleryGrid"></div>
+</section>
+
+<!-- 5. MOOD TRACKER -->
+<section class="page" id="mood">
+ <div class="section-head">
+  <div class="eyebrow">how is your heart today?</div>
+  <h2>Mood Tracker 🌷</h2>
+  <p>Semua perasaanmu valid dan diterima di sini.</p>
+ </div>
+ <div class="card" style="max-width:650px;margin:auto">
+  <h3>Pick your mood today</h3>
+  <div class="btn-row" id="moodChoices">
+   <button class="mood-btn" data-mood="🥰 Happy">🥰</button>
+   <button class="mood-btn" data-mood="😌 Calm">😌</button>
+   <button class="mood-btn" data-mood="☁️ Dreamy">☁️</button>
+   <button class="mood-btn" data-mood="🥺 Soft / Sad">🥺</button>
+   <button class="mood-btn" data-mood="😴 Sleepy">😴</button>
+   <button class="mood-btn" data-mood="🤩 Excited">🤩</button>
+  </div>
+  <label>Anything you want to write?</label>
+  <textarea id="moodNote" placeholder="It's okay to let it out..."></textarea>
+  <div class="btn-row"><button class="btn" onclick="saveMood()">Save today's mood ♡</button></div>
+  <div class="divider"></div>
+  <h3>Your mood history</h3>
+  <div id="moodHistory"></div>
+ </div>
+</section>
+
+<!-- 6. FOCUS TIMER & RAIN SOUND -->
+<section class="page" id="focus">
+ <div class="section-head">
+  <div class="eyebrow">a gentle little pause</div>
+  <h2>Cozy Focus & Rain ⏳</h2>
+  <p>Fokus sejenak ditemani suara hujan lembut, dan dapatkan +10 koin setiap sesi selesai!</p>
+ </div>
+ <div class="card" style="max-width:520px;margin:auto;text-align:center">
+  <div class="big-emoji">☔</div>
+  <div style="font:700 62px 'Playfair Display',serif;color:var(--heading);margin:6px 0" id="timerDisplay">25:00</div>
+  <p id="timerLabel">A cozy focus session</p>
+  <div class="btn-row">
+   <button class="btn" onclick="startTimer()">Start ▶</button>
+   <button class="btn secondary" onclick="pauseTimer()">Pause ⏸</button>
+   <button class="btn secondary" onclick="resetTimer()">Reset ↺</button>
+   <button class="btn secondary" id="rainBtn" onclick="toggleRain()">🌧️ Rain: off</button>
+  </div>
+  <label>Session length</label>
+  <select id="timerLength" onchange="resetTimer()">
+   <option value="25">25 minutes (Deep Focus)</option>
+   <option value="15">15 minutes (Quick Sprint)</option>
+   <option value="5">5 minutes (Cozy Break)</option>
+  </select>
+ </div>
+</section>
+
+<!-- 7. MULTI-SPOTIFY PLAYLIST -->
+<section class="page" id="playlist">
+ <div class="section-head">
+  <div class="eyebrow">soundtrack of your universe</div>
+  <h2>Spotify Playlist Corner 🎧</h2>
+  <p>Tempelkan link lagu, album, atau playlist Spotify sebanyak yang kamu mau!</p>
+ </div>
+ <div class="card" style="max-width:720px;margin:auto">
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+   <input id="spotifyUrl" placeholder="Paste Spotify link (https://open.spotify.com/playlist/... or /track/...)" style="flex:1;min-width:220px">
+   <button class="btn" onclick="addSpotifyEmbed()">Embed Spotify +</button>
+  </div>
+  <div class="spotify-list" id="spotifyEmbedList"></div>
+ </div>
+</section>
+
+<!-- 8. DIARY -->
+<section class="page" id="diary">
+ <div class="section-head">
+  <div class="eyebrow">dear diary</div>
+  <h2>My Little Diary 📔</h2>
+  <p>Ruang aman untuk menuliskan cerita harimu.</p>
+ </div>
+ <div class="card" style="max-width:700px;margin:auto">
+  <label>Today's title</label>
+  <input id="diaryTitle" placeholder="A title for today...">
+  <label>Your story</label>
+  <textarea id="diaryText" placeholder="Dear diary, today..."></textarea>
+  <div class="btn-row"><button class="btn" onclick="saveDiary()">Save entry ♡</button></div>
+  <div class="divider"></div>
+  <h3>Past entries</h3>
+  <div id="diaryList"></div>
+ </div>
+</section>
+
+<!-- 9. TIME CAPSULE -->
+<section class="page" id="capsule">
+ <div class="section-head">
+  <div class="eyebrow">a message for later</div>
+  <h2>Secret Time Capsule 💌</h2>
+  <p>Tulis surat rahasia untuk dirimu di masa depan dan kunci hingga tanggal tertentu.</p>
+ </div>
+ <div class="card" style="max-width:650px;margin:auto">
+  <label>Open this message on</label>
+  <input type="date" id="capsuleDate">
+  <label>Your message</label>
+  <textarea id="capsuleText" placeholder="Dear future me..."></textarea>
+  <div class="btn-row"><button class="btn" onclick="saveCapsule()">Seal my letter 🔒</button></div>
+  <div class="divider"></div>
+  <div id="capsuleList"></div>
+ </div>
+</section>
+
+<!-- 10. WISHLIST -->
+<section class="page" id="wishlist">
+ <div class="section-head">
+  <div class="eyebrow">little dreams</div>
+  <h2>My Dream Wishlist 🛍</h2>
+  <p>Kumpulkan semua impian kecil maupun besarmu.</p>
+ </div>
+ <div class="card" style="max-width:650px;margin:auto">
+  <div style="display:flex;gap:10px">
+   <input id="wishInput" placeholder="Something you wish for...">
+   <button class="btn" onclick="addWish()" style="white-space:nowrap">Add +</button>
+  </div>
+  <div class="divider"></div>
+  <div id="wishList"></div>
+ </div>
+</section>
+
+<!-- 11. FORTUNE -->
+<section class="page" id="fortune">
+ <div class="section-head">
+  <div class="eyebrow">a tiny message from the universe</div>
+  <h2>Fortune Corner 🔮</h2>
+  <p>Tarik napas sejenak dan terima pesan manis dari semesta.</p>
+ </div>
+ <div class="card" style="max-width:560px;margin:auto;text-align:center">
+  <div class="big-emoji">🔮</div>
+  <h3 id="fortuneText" style="font:italic 22px 'Playfair Display',serif;margin:14px 0">Something lovely is finding its way to you.</h3>
+  <button class="btn" onclick="newFortune()">Reveal another message ♡</button>
+ </div>
+</section>
+
+<!-- 12. COLLECTION & ACHIEVEMENTS -->
+<section class="page" id="collection">
+ <div class="section-head">
+  <div class="eyebrow">your little treasures</div>
+  <h2>My Collection & Badges 🎀</h2>
+ </div>
+ <div class="grid">
+  <div class="card"><h3>Fashion Wardrobe</h3><div id="fashionCollection" class="item-grid"></div></div>
+  <div class="card"><h3>Adopted Besties</h3><div id="petCollection" class="item-grid"></div></div>
+  <div class="card"><h3>Room Treasures</h3><div id="decorCollection" class="item-grid"></div></div>
+  <div class="card"><h3>Achievements</h3><div id="achievementList"></div></div>
+ </div>
+</section>
+
+<!-- 13. SETTINGS -->
+<section class="page" id="settings">
+ <div class="section-head">
+  <div class="eyebrow">your universe, your rules</div>
+  <h2>Settings ⚙️</h2>
+ </div>
+ <div class="card" style="max-width:560px;margin:auto">
+  <label>Your Princess Nickname</label>
+  <input id="playerNickname" maxlength="20" placeholder="Little Star">
+  <div class="btn-row">
+   <button class="btn" onclick="saveNickname()">Save nickname ♡</button>
+   <button class="btn secondary" onclick="toggleTheme()">Switch Theme</button>
+   <button class="btn secondary" onclick="exportSave()">Export Save JSON</button>
+  </div>
+ </div>
+</section>
+</main>
+
+<!-- Floating Interactive Mochi Bunny Companion -->
+<div class="floating-mochi" id="floatingMochi">
+ <div class="mochi-bubble" id="mochiBubble">hai! aku Mochi, kelinci kecilmu di sini ♡</div>
+ <div class="mochi-body-wrap">
+  <button class="mochi-avatar-btn" id="mochiAvatarBtn" title="Klik Mochi untuk ngobrol!">
+   <svg viewBox="0 0 100 115" xmlns="http://www.w3.org/2000/svg">
+    <g class="bunny-ear-l">
+     <ellipse cx="36" cy="26" rx="9" ry="24" transform="rotate(-10 36 26)" fill="#ffffff" stroke="#e4dcf2" stroke-width="2"/>
+     <ellipse cx="36" cy="27" rx="4.5" ry="16" transform="rotate(-10 36 27)" fill="#ffc2df"/>
+    </g>
+    <g class="bunny-ear-r">
+     <ellipse cx="64" cy="26" rx="9" ry="24" transform="rotate(10 64 26)" fill="#ffffff" stroke="#e4dcf2" stroke-width="2"/>
+     <ellipse cx="64" cy="27" rx="4.5" ry="16" transform="rotate(10 64 27)" fill="#ffc2df"/>
+    </g>
+    <circle cx="76" cy="96" r="8" fill="#ffffff" stroke="#e4dcf2" stroke-width="1.5"/>
+    <ellipse cx="50" cy="92" rx="22" ry="18" fill="#ffffff" stroke="#e4dcf2" stroke-width="2"/>
+    <path d="M42 78 L50 82 L42 86 Z" fill="#8ec5fc"/>
+    <path d="M58 78 L50 82 L58 86 Z" fill="#8ec5fc"/>
+    <circle cx="50" cy="82" r="3" fill="#f49ac2"/>
+    <ellipse cx="39" cy="107" rx="7" ry="4.5" fill="#ffffff" stroke="#e4dcf2" stroke-width="1.8"/>
+    <ellipse cx="61" cy="107" rx="7" ry="4.5" fill="#ffffff" stroke="#e4dcf2" stroke-width="1.8"/>
+    <ellipse cx="50" cy="58" rx="28" ry="23" fill="#ffffff" stroke="#e4dcf2" stroke-width="2"/>
+    <ellipse cx="32" cy="63" rx="5.5" ry="3.2" fill="#ff9ecd" opacity="0.65"/>
+    <ellipse cx="68" cy="63" rx="5.5" ry="3.2" fill="#ff9ecd" opacity="0.65"/>
+    <g id="fBunnyEyesNormal">
+     <circle cx="38" cy="56" r="3.4" fill="#4a4458"/>
+     <circle cx="39.2" cy="54.8" r="1.2" fill="#ffffff"/>
+     <circle cx="62" cy="56" r="3.4" fill="#4a4458"/>
+     <circle cx="63.2" cy="54.8" r="1.2" fill="#ffffff"/>
+    </g>
+    <g id="fBunnyEyesHappy" style="display:none">
+     <path d="M34 57 Q38 51 42 57" fill="none" stroke="#4a4458" stroke-width="2.4" stroke-linecap="round"/>
+     <path d="M58 57 Q62 51 66 57" fill="none" stroke="#4a4458" stroke-width="2.4" stroke-linecap="round"/>
+    </g>
+    <polygon points="48,61 52,61 50,63.5" fill="#f49ac2"/>
+    <path id="fBunnyMouthNormal" d="M46 65.5 Q48 68 50 65.5 Q52 68 54 65.5" fill="none" stroke="#4a4458" stroke-width="1.8" stroke-linecap="round"/>
+    <ellipse id="fBunnyMouthEat" cx="50" cy="66.5" rx="3.5" ry="3" fill="#f49ac2" style="display:none"/>
+    <ellipse cx="33" cy="91" rx="5.5" ry="4" transform="rotate(-20 33 91)" fill="#ffffff" stroke="#e4dcf2" stroke-width="1.8"/>
+    <ellipse cx="67" cy="91" rx="5.5" ry="4" transform="rotate(20 67 91)" fill="#ffffff" stroke="#e4dcf2" stroke-width="1.8"/>
+   </svg>
+  </button>
+ </div>
+ <div class="mochi-controls">
+  <button class="mochi-chip" onclick="interactFloatingMochi('feed')">🍓 feed</button>
+  <button class="mochi-chip" onclick="interactFloatingMochi('pat')">🤍 pat</button>
+  <button class="mochi-chip" id="mochiToggleBtn" onclick="toggleFloatingMochi()" title="Hide/Show Mochi">–</button>
+ </div>
+</div>
+
+<!-- Polaroid Lightbox Modal -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)this.classList.remove('open')">
+ <div class="lightbox-card">
+  <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">×</button>
+  <div id="lightboxMedia"></div>
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+ </div>
+</div>
+
+<footer>made with love, cotton candy skies, and a little bit of magic ♡</footer>
+
+<script>
+const STORE_KEY = 'littleWorldUniverseV4';
+const defaults = {
+ coins: 30, xp: 0, level: 1, princess: 'luna',
+ ownedPets: ['🐰'],
+ decorOwned: ['🛏️', '🧸', '🌷', '🪴'],
+ roomTheme: 0,
+ roomItems: ['🛏️', '🧸', '🌷', '🪴'],
+ nickname: '',
+ pet: { emoji: '🐰', name: 'Mochi', hunger: 75, happy: 80, clean: 85, energy: 80 },
+ gifts: [], lastGift: '',
+ gallery: [
+  { type: 'emoji', emoji: '🌸', caption: 'welcome to my universe ♡', frame: 'pink-frame', size: 'md', date: 'Today' }
+ ],
+ polaroidLayout: 'scrapbook',
+ moods: [], diary: [], capsules: [], wishes: [],
+ outfit: 'rose', hair: 'chestnut', crown: 'tiara', shoes: 'glass', makeup: 'soft', extras: 'pearl',
+ theme: 'light', cafeEarned: 0,
+ spotifyEmbeds: [{ type: 'playlist', id: '37i9dQZF1DX4sWSpwq3LiO' }]
+};
+
+let state;
+try {
+ state = { ...defaults, ...JSON.parse(localStorage.getItem(STORE_KEY) || '{}') };
+} catch {
+ state = { ...defaults };
+}
+state.pet = { ...defaults.pet, ...(state.pet || {}) };
+state.ownedPets = state.ownedPets || [state.pet.emoji];
+state.decorOwned = state.decorOwned || defaults.decorOwned;
+state.roomItems = state.roomItems || defaults.roomItems;
+state.spotifyEmbeds = state.spotifyEmbeds || defaults.spotifyEmbeds;
+
+function saveState() {
+ try {
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+ } catch {
+  showToast('Storage penuh! Hapus beberapa foto lama ya ♡');
+ }
+ updateStats();
+}
+
+function addCoins(n) {
+ state.coins = Math.max(0, state.coins + n);
+ state.xp += Math.max(1, n);
+ checkLevel();
+ saveState();
+}
+
+function checkLevel() {
+ let next = state.level * 100;
+ while (state.xp >= next) {
+  state.xp -= next;
+  state.level++;
+  next = state.level * 100;
+  showToast('Level up! Princess Level ' + state.level + ' ✨');
+ }
+}
+
+function updateStats() {
+ document.getElementById('coinDisplay').textContent = '♡ ' + state.coins + ' coins';
+ document.getElementById('heroCoins').textContent = state.coins;
+ document.getElementById('heroLevel').textContent = state.level;
+ document.getElementById('heroPet').textContent = state.pet.emoji;
+ const homePetEl = document.getElementById('homePetText');
+ if (homePetEl) homePetEl.textContent = state.pet.name;
+ document.getElementById('levelProgress').style.width = Math.min(100, (state.xp / (state.level * 100)) * 100) + '%';
+ document.getElementById('levelText').textContent = state.xp + ' / ' + (state.level * 100) + ' XP to next level';
+ document.getElementById('cafeEarned').textContent = state.cafeEarned || 0;
+ if (state.nickname) {
+  document.getElementById('heroGreeting').textContent = `Selamat datang kembali, Putri ${state.nickname}! Dandanin putri, rawat ${state.pet.name}, dan hias kamarmu.`;
+ }
+}
+
+function showToast(msg) {
+ let t = document.getElementById('toast');
+ if (!t) {
+  t = document.createElement('div');
+  t.id = 'toast';
+  t.style.cssText = 'position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#e57ab2,#6caef7);color:white;padding:10px 18px;border-radius:99px;z-index:500;font-size:12px;font-weight:600;box-shadow:0 8px 24px #55416a44';
+  document.body.appendChild(t);
+ }
+ t.textContent = msg;
+ t.style.display = 'block';
+ clearTimeout(window.toastTimer);
+ window.toastTimer = setTimeout(() => t.style.display = 'none', 2400);
+}
+
+// Navigation & Storybook Page Flipping
+const pageOrder = ['home', 'games', 'gift', 'gallery', 'mood', 'focus', 'playlist', 'diary', 'capsule', 'wishlist', 'fortune', 'collection', 'settings'];
+let currentPageId = 'home';
+let activeGamesSubtab = 'arcade';
+
+function setGamesSubtab(subId) {
+ const valid = ['arcade', 'dress', 'cake', 'pet', 'room', 'cafe', 'wishwell'];
+ activeGamesSubtab = valid.includes(subId) ? subId : 'arcade';
+ document.querySelectorAll('#gamesSubtabs button').forEach(btn => {
+  btn.classList.toggle('active', btn.dataset.gamesTab === activeGamesSubtab);
+ });
+ document.querySelectorAll('.arcade-panel').forEach(panel => {
+  panel.classList.toggle('active', panel.id === 'games-panel-' + activeGamesSubtab);
+ });
+ if (activeGamesSubtab === 'dress') renderDress();
+ if (activeGamesSubtab === 'cake') renderCustomCake();
+ if (activeGamesSubtab === 'pet') renderPet();
+ if (activeGamesSubtab === 'room') renderRoom();
+}
+
+function openGamesTab(subId) {
+ showPage('games');
+ setGamesSubtab(subId);
+}
+
+document.getElementById('gamesSubtabs').addEventListener('click', e => {
+ const b = e.target.closest('[data-games-tab]');
+ if (!b) return;
+ setGamesSubtab(b.dataset.gamesTab);
+});
+
+function showPage(id) {
+ if (!pageOrder.includes(id)) id = 'home';
+ currentPageId = id;
+ document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === id));
+ document.querySelectorAll('#mainNav button').forEach(b => {
+  const active = b.dataset.page === id;
+  b.classList.toggle('active', active);
+  if (active) b.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+ });
+ if (id === 'games') setGamesSubtab(activeGamesSubtab);
+ if (id === 'gallery') renderGallery();
+ if (id === 'mood') renderMoods();
+ if (id === 'playlist') renderSpotifyEmbeds();
+ if (id === 'diary') renderDiary();
+ if (id === 'capsule') renderCapsules();
+ if (id === 'wishlist') renderWishes();
+ if (id === 'gift') renderGifts();
+ if (id === 'collection') renderCollection();
+ if (id === 'settings') document.getElementById('playerNickname').value = state.nickname || '';
+}
+
+function stepPage(dir) {
+ const idx = pageOrder.indexOf(currentPageId);
+ const nextIdx = (idx + dir + pageOrder.length) % pageOrder.length;
+ showPage(pageOrder[nextIdx]);
+}
+
+document.querySelectorAll('#mainNav button').forEach(b => {
+ b.addEventListener('click', () => showPage(b.dataset.page));
+});
+
+document.addEventListener('keydown', e => {
+ if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+ if (e.key === 'ArrowRight') stepPage(1);
+ else if (e.key === 'ArrowLeft') stepPage(-1);
+});
+
+// Cursor Sparkle Trail
+const cursorPacks = {
+ stars: ['✧', '✦', '⋆', '✩'],
+ hearts: ['♡', '♥', '୨୧', '💕'],
+ bubbles: ['🫧', '○', '◌', '°']
+};
+document.addEventListener('click', e => {
+ const pack = cursorPacks[document.getElementById('cursorSelect').value] || cursorPacks.stars;
+ const s = document.createElement('span');
+ s.className = 'cursor-sparkle';
+ s.textContent = pack[Math.floor(Math.random() * pack.length)];
+ s.style.left = e.clientX + 'px';
+ s.style.top = e.clientY + 'px';
+ document.body.appendChild(s);
+ setTimeout(() => s.remove(), 850);
+});
+
+// Theme Toggle
+function toggleTheme() {
+ document.body.classList.toggle('dark');
+ state.theme = document.body.classList.contains('dark') ? 'dark' : 'light';
+ document.getElementById('themeBtn').textContent = state.theme === 'dark' ? '☀ light' : '☾ dark';
+ saveState();
+}
+if (state.theme === 'dark') {
+ document.body.classList.add('dark');
+ document.getElementById('themeBtn').textContent = '☀ light';
+}
+
+// Web Audio Lullaby Music Box
+let ambientAudio = null, ambientTimer = null, ambientOn = false;
+function initAudio() {
+ const Ctx = window.AudioContext || window.webkitAudioContext;
+ if (!Ctx) return null;
+ if (!ambientAudio) ambientAudio = new Ctx();
+ return ambientAudio;
+}
+function toggleSound() {
+ if (ambientOn) {
+  ambientOn = false;
+  clearInterval(ambientTimer);
+  if (ambientAudio && ambientAudio.state === 'running') ambientAudio.suspend();
+  document.getElementById('soundBtn').textContent = '♫ music off';
+  return;
+ }
+ const ctx = initAudio();
+ if (!ctx) return showToast('Audio not supported');
+ if (ctx.state === 'suspended') ctx.resume();
+ ambientOn = true;
+ document.getElementById('soundBtn').textContent = '♫ music on';
+ const notes = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 783.99, 698.46];
+ let n = 0;
+ const play = () => {
+  if (!ambientOn || !ambientAudio) return;
+  const osc = ambientAudio.createOscillator();
+  const gain = ambientAudio.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = notes[n++ % notes.length];
+  gain.gain.setValueAtTime(0.0001, ambientAudio.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.03, ambientAudio.currentTime + 0.05);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ambientAudio.currentTime + 0.9);
+  osc.connect(gain);
+  gain.connect(ambientAudio.destination);
+  osc.start();
+  osc.stop(ambientAudio.currentTime + 0.95);
+ };
+ play();
+ ambientTimer = setInterval(play, 950);
+}
+
+// DRESS-UP STUDIO (Expanded Collection + Synced with Home Banner Princess!)
+const dressCatalog = {
+ outfits: [
+  ['rose', '🌹', 'Rose Garden Gown', '#f4a8c8', '#c66e9f'],
+  ['ice', '🩵', 'Ice Princess', '#b8e5fa', '#729bd7'],
+  ['lavender', '💜', 'Lavender Dream', '#c9b3ee', '#9673c9'],
+  ['sunset', '🌅', 'Sunset Fairy', '#ffc4a7', '#e68a9b'],
+  ['royal', '👑', 'Royal Velvet', '#8e77c9', '#55448d'],
+  ['swan', '🦢', 'Swan Ballet', '#f5f0ff', '#c6b9df'],
+  ['cherry', '🍒', 'Cherry Coquette', '#f58eaa', '#c34d75'],
+  ['mint', '🍃', 'Mint Sorbet', '#b4e7d4', '#6eb69e'],
+  ['starlight', '🌙', 'Starlight Tulle', '#a7a5e8', '#6664b3'],
+  ['peach', '🍑', 'Peach Blossom', '#ffd1b8', '#f28f79'],
+  ['emerald', '🍀', 'Emerald Forest', '#9be0b8', '#4b9e74'],
+  ['sakura', '🌸', 'Sakura Kimono Gown', '#ffcfe3', '#e882b2'],
+  ['lemon', '🍋', 'Lemonade Ruffles', '#fff2a6', '#e6c24c'],
+  ['midnight', '🌌', 'Midnight Galaxy', '#5b63a8', '#2e346b'],
+  ['cotton', '🍭', 'Cotton Candy Tulle', '#ffbde0', '#96d2ff'],
+  ['angel', '🪽', 'Seraphim Angel Gown', '#fff7fc', '#d9c6ff'],
+  ['velvetrose', '🌹', 'Crimson Velvet Rose', '#e8688c', '#9c2d52'],
+  ['oceanpearl', '🐚', 'Mermaid Pearl Wave', '#9ce6e0', '#5ba4cf'],
+  ['honeybee', '🐝', 'Honeybee Garden', '#ffe082', '#e0a938'],
+  ['stargazer', '🔭', 'Celestial Starlight', '#7c88d9', '#3b3275'],
+  ['matchalatte', '🍵', 'Matcha Parfait Dress', '#cdeec7', '#74b378'],
+  ['berrymacaron', '🧁', 'Berry Macaron Tier', '#ff9ec2', '#d66294'],
+  ['aurora', '🌈', 'Aurora Crystal Dress', '#b8e8ff', '#d5a8ff'],
+  ['royalrose', '👸🏻', 'Imperial Rose Ballgown', '#ff85b3', '#b83b6e'],
+  ['celestial', '🪐', 'Starlight Princess Gown', '#9bb7ff', '#6859b8']
+ ],
+ hair: [
+  ['chestnut', '🤎', 'Chestnut Waves', '#754536', 'waves'],
+  ['blonde', '🌼', 'Honey Ponytail', '#e8bd68', 'ponytail'],
+  ['black', '🖤', 'Midnight Silk', '#342b35', 'waves'],
+  ['pink', '🌸', 'Cotton Candy Twin', '#e99ac6', 'twin'],
+  ['silver', '🩶', 'Moon Silver Waves', '#c7c9d8', 'waves'],
+  ['auburn', '🍁', 'Rose Curly Bob', '#a94e42', 'bob'],
+  ['lavender', '💜', 'Lilac Twin Tails', '#a88bc9', 'twin'],
+  ['bun', '🌼', 'Flower Bun', '#6d4b3e', 'bun'],
+  ['blue', '🩵', 'Ocean High Pony', '#668fc4', 'ponytail'],
+  ['mint', '🍃', 'Mint Fairy Waves', '#8cd4be', 'waves'],
+  ['peach', '🍑', 'Apricot Twin Tails', '#f0a684', 'twin'],
+  ['platinum', '🤍', 'Snow Princess Bun', '#f2eff7', 'bun'],
+  ['caramel', '🍯', 'Caramel Bob', '#b57845', 'bob'],
+  ['strawberrymilk', '🍓', 'Strawberry Milk Waves', '#ff9ec4', 'waves'],
+  ['skyblue', '☁️', 'Sky Cloud Twin Tails', '#8ec5fc', 'twin'],
+  ['espresso', '☕', 'Mocha Ribbon Bun', '#5c3a2e', 'bun'],
+  ['lilacbob', '🪻', 'Lilac Dream Bob', '#b99ae0', 'bob'],
+  ['peachwaves', '🌺', 'Hibiscus Wave Hair', '#f79cb8', 'waves']
+ ],
+ crowns: [
+  ['tiara', '👑', 'Crystal Tiara'],
+  ['flower', '🌸', 'Flower Crown'],
+  ['bow', '🎀', 'Silk Bow'],
+  ['halo', '✨', 'Star Halo'],
+  ['beret', '🧁', 'Pearl Beret'],
+  ['bunny', '🐰', 'Bunny Ears'],
+  ['witch', '🪄', 'Pastel Witch Hat'],
+  ['butterfly', '🦋', 'Butterfly Crown'],
+  ['cat', '🐱', 'Kitty Ears'],
+  ['heartcrown', '💖', 'Sweetheart Diadem'],
+  ['sunflower', '🌻', 'Sunflower Wreath'],
+  ['starclip', '🌟', 'Starlight Clips'],
+  ['bearhood', '🐻', 'Teddy Ear Clip'],
+  ['none', '♡', 'No Headpiece']
+ ],
+ shoes: [
+  ['glass', '👠', 'Glass Heels', '#c9c8f0'],
+  ['pink', '🩰', 'Pink Ballet Flats', '#e99abc'],
+  ['boots', '🥾', 'Garden Boots', '#a77b67'],
+  ['gold', '✨', 'Golden Heels', '#e8bd69'],
+  ['blue', '🥿', 'Blue Satin Shoes', '#83a9d8'],
+  ['white', '🤍', 'Pearl Shoes', '#eeeaf5'],
+  ['lavender', '💜', 'Lilac Ribbon Heels', '#c4a6eb'],
+  ['cherry', '🍒', 'Cherry Mary Janes', '#e06388'],
+  ['mint', '🍃', 'Mint Slippers', '#95dec6'],
+  ['peachheels', '🍑', 'Apricot Strappy Heels', '#f5a882'],
+  ['starboots', '👢', 'Starlight Ankle Boots', '#8c84d6'],
+  ['strawberryflats', '🍓', 'Berry Bow Flats', '#f27ca4'],
+  ['velvetheels', '🌹', 'Rose Velvet Pumps', '#d95b84']
+ ],
+ makeup: [
+  ['soft', '🌷', 'Rosy Glow', '#ef9baa'],
+  ['glam', '💖', 'Fairy Glam', '#d77ca8'],
+  ['peach', '🍑', 'Peach Blush', '#edaa82'],
+  ['star', '✨', 'Stardust', '#b49be9'],
+  ['berry', '🍓', 'Berry Tint', '#e06788'],
+  ['sun', '☀️', 'Sun-Kissed', '#e89b74'],
+  ['sakura', '🌸', 'Sakura Dew', '#f5a6c8'],
+  ['iceglaze', '🩵', 'Frosty Dew', '#98c9f5'],
+  ['plumglaze', '🍇', 'Berry Glaze', '#c9759d'],
+  ['none', '♡', 'Bare Beauty', '#efb4aa']
+ ],
+ extras: [
+  ['pearl', '🤍', 'Pearl Necklace'],
+  ['heart', '💗', 'Heart Pendant'],
+  ['wand', '🪄', 'Magic Wand'],
+  ['bag', '👜', 'Mini Handbag'],
+  ['butterfly', '🦋', 'Butterfly Pin'],
+  ['fan', '🪭', 'Lace Fan'],
+  ['parasol', '☂️', 'Lace Parasol'],
+  ['bouquet', '💐', 'Rose Bouquet'],
+  ['wings', '🧚', 'Fairy Wings'],
+  ['teddy', '🧸', 'Mini Plushie'],
+  ['teacup', '🍵', 'Tea Cup Tray'],
+  ['musicnote', '🎵', 'Melody Ribbon'],
+  ['starwand', '🌟', 'Starlight Scepter'],
+  ['none', '♡', 'No Extra']
+ ]
+};
+
+let dressTab = 'outfits';
+document.getElementById('dressTabs').addEventListener('click', e => {
+ const b = e.target.closest('[data-dress-tab]');
+ if (!b) return;
+ dressTab = b.dataset.dressTab;
+ renderDress();
+});
+
+function selectPrincess(id) {
+ state.princess = id;
+ document.querySelectorAll('#princessChoices button').forEach((b, i) => {
+  b.classList.toggle('selected', ['luna', 'flora', 'aria'][i] === id);
+ });
+ renderDress();
+ saveState();
+}
+
+function chooseDressItem(cat, id) {
+ const keyMap = { outfits: 'outfit', hair: 'hair', crowns: 'crown', shoes: 'shoes', makeup: 'makeup', extras: 'extras' };
+ state[keyMap[cat]] = id;
+ renderDress();
+ const doll = document.getElementById('princessArt');
+ doll.classList.remove('makeover-pop');
+ void doll.offsetWidth;
+ doll.classList.add('makeover-pop');
+ saveState();
+}
+
+function renderDress() {
+ const keyMap = { outfits: 'outfit', hair: 'hair', crowns: 'crown', shoes: 'shoes', makeup: 'makeup', extras: 'extras' };
+ const currentKey = keyMap[dressTab];
+ const items = dressCatalog[dressTab] || dressCatalog.outfits;
+ document.getElementById('dressWardrobe').innerHTML = `
+  <div class="dress-wardrobe">
+   ${items.map(([id, emoji, name]) => `
+    <button class="dress-choice ${state[currentKey] === id ? 'selected' : ''}" onclick="chooseDressItem('${dressTab}','${id}')">
+     <span class="choice-emoji">${emoji}</span>
+     <span class="choice-name">${name}</span>
+    </button>
+   `).join('')}
+  </div>
+ `;
+ document.querySelectorAll('[data-dress-tab]').forEach(b => b.classList.toggle('active', b.dataset.dressTab === dressTab));
+ const selectedOutfit = dressCatalog.outfits.find(x => x[0] === state.outfit) || dressCatalog.outfits[0];
+ document.getElementById('dressCaption').textContent = selectedOutfit[2];
+ const svg = buildPrincessSVG();
+ document.getElementById('princessArt').innerHTML = svg;
+ document.getElementById('homePrincessArt').innerHTML = svg;
+}
+
+function resetDress() {
+ Object.assign(state, { princess: 'luna', outfit: 'rose', hair: 'chestnut', crown: 'tiara', shoes: 'glass', makeup: 'soft', extras: 'pearl' });
+ dressTab = 'outfits';
+ renderDress();
+ saveState();
+ showToast('Princess look reset ♡');
+}
+
+function randomOutfit() {
+ const keyMap = { outfits: 'outfit', hair: 'hair', crowns: 'crown', shoes: 'shoes', makeup: 'makeup', extras: 'extras' };
+ for (const [cat, key] of Object.entries(keyMap)) {
+  const list = dressCatalog[cat];
+  state[key] = list[Math.floor(Math.random() * list.length)][0];
+ }
+ renderDress();
+ saveState();
+ showToast('Magical makeover complete! ✨');
+}
+
+function buildPrincessSVG() {
+ const outfit = dressCatalog.outfits.find(x => x[0] === state.outfit) || dressCatalog.outfits[0];
+ const hair = dressCatalog.hair.find(x => x[0] === state.hair) || dressCatalog.hair[0];
+ const shoe = dressCatalog.shoes.find(x => x[0] === state.shoes) || dressCatalog.shoes[0];
+ const makeup = dressCatalog.makeup.find(x => x[0] === state.makeup) || dressCatalog.makeup[0];
+ const top = outfit[3], skirt = outfit[4], hc = hair[3], hairStyle = hair[4] || 'waves';
+ const sc = shoe[3], blush = makeup[3] || '#ef9baa';
+ const profile = {
+  luna: { skin: '#ffe8d8', eye: '#6b568c' },
+  flora: { skin: '#f5c9aa', eye: '#527b68' },
+  aria: { skin: '#f4d2bb', eye: '#527e9b' }
+ }[state.princess || 'luna'];
+
+ let backHair = `<path d="M103 91Q91 39 149 34Q209 35 198 105L194 173Q185 195 171 169L177 103Q150 120 121 102L120 168Q104 190 96 160Z" fill="${hc}" stroke="#593c44" stroke-width="2.5"/>`;
+ if (hairStyle === 'ponytail') {
+  backHair = `<path d="M168 54Q218 66 212 146Q198 164 184 138Q188 92 162 72Z" fill="${hc}" stroke="#593c44" stroke-width="2.5"/>`;
+ } else if (hairStyle === 'twin') {
+  backHair = `<path d="M108 66Q72 86 78 168Q94 182 106 156Q102 106 116 84Z M192 66Q228 86 222 168Q206 182 194 156Q198 106 184 84Z" fill="${hc}" stroke="#593c44" stroke-width="2.5"/>`;
+ } else if (hairStyle === 'bob') {
+  backHair = `<path d="M104 88Q96 42 150 36Q204 42 196 88Q202 122 182 128L118 128Q98 122 104 88Z" fill="${hc}" stroke="#593c44" stroke-width="2.5"/>`;
+ } else if (hairStyle === 'bun') {
+  backHair = `<circle cx="150" cy="30" r="22" fill="${hc}" stroke="#593c44" stroke-width="2.5"/>`;
+ }
+
+ const crownMap = {
+  tiara: '<path d="M111 67L119 43 135 59 150 32 165 59 181 43 189 68Z" fill="#f8d875" stroke="#bd9148" stroke-width="3"/><circle cx="150" cy="48" r="5" fill="#f28dbb"/>',
+  flower: '<g fill="#f7a6c8" stroke="#fff" stroke-width="2"><circle cx="119" cy="59" r="9"/><circle cx="137" cy="49" r="9"/><circle cx="155" cy="51" r="9"/><circle cx="174" cy="58" r="9"/></g>',
+  bow: '<path d="M149 58Q111 25 116 58Q120 78 149 63Q180 79 185 56Q183 28 151 56Z" fill="#f28bb9" stroke="#bd5c8d" stroke-width="3"/><circle cx="150" cy="58" r="7" fill="#fff0f7"/>',
+  halo: '<ellipse cx="150" cy="43" rx="40" ry="10" fill="none" stroke="#f4d16e" stroke-width="5"/><path d="M150 22l5 10 11 2-8 7 2 11-10-6-9 6 2-11-8-7 11-2Z" fill="#ffe58d"/>',
+  beret: '<path d="M111 61Q111 24 151 29Q186 30 189 60Z" fill="#d5a6d1" stroke="#a77aa6" stroke-width="3"/>',
+  bunny: '<g><ellipse cx="132" cy="24" rx="8" ry="24" transform="rotate(-12 132 24)" fill="#fff" stroke="#d89ab9" stroke-width="2.5"/><ellipse cx="132" cy="25" rx="4" ry="15" transform="rotate(-12 132 25)" fill="#ffb8d9"/><ellipse cx="168" cy="24" rx="8" ry="24" transform="rotate(12 168 24)" fill="#fff" stroke="#d89ab9" stroke-width="2.5"/><ellipse cx="168" cy="25" rx="4" ry="15" transform="rotate(12 168 25)" fill="#ffb8d9"/></g>',
+  witch: '<g><ellipse cx="150" cy="56" rx="48" ry="10" fill="#b89ae8" stroke="#7d60b0" stroke-width="2.5"/><path d="M122 55L150 10L178 55Z" fill="#c7acf2" stroke="#7d60b0" stroke-width="2.5"/><path d="M125 49Q150 56 175 49" fill="none" stroke="#f7a8ce" stroke-width="4"/></g>',
+  butterfly: '<g fill="#a9d4ff" stroke="#6d9ad1" stroke-width="2"><path d="M132 52Q114 34 118 52Q122 64 132 55Z"/><path d="M168 52Q186 34 182 52Q178 64 168 55Z"/><circle cx="150" cy="48" r="6" fill="#ffd97d"/></g>',
+  none: ''
+ };
+
+ const extraMap = {
+  pearl: '<path d="M119 151Q150 180 181 151" fill="none" stroke="#fff" stroke-width="4"/><g fill="#fff" stroke="#d9c5df"><circle cx="127" cy="161" r="4"/><circle cx="139" cy="168" r="4"/><circle cx="150" cy="171" r="4"/><circle cx="161" cy="168" r="4"/><circle cx="173" cy="161" r="4"/></g>',
+  heart: '<path d="M150 169C120 147 137 132 150 147C164 132 181 147 150 169Z" fill="#ed82aa" stroke="#c45d91" stroke-width="2"/>',
+  wand: '<path d="M207 246L232 204" stroke="#c49bdc" stroke-width="5" stroke-linecap="round"/><path d="M232 190l4 9 10 1-8 6 2 10-8-6-8 6 2-10-8-6 10-1Z" fill="#ffe17b"/>',
+  bag: '<g transform="translate(194 245)"><rect width="34" height="36" rx="9" fill="#f1a8c7" stroke="#bd709b" stroke-width="3"/><path d="M7 5Q17 -12 27 5" fill="none" stroke="#bd709b" stroke-width="3"/></g>',
+  butterfly: '<g transform="translate(193 130)"><path d="M0 0Q-26 -28 -25 -3Q-23 18 0 5Q23 -18 25 -3Q23 18 0 5Z" fill="#a9c9ef" stroke="#6f91c5" stroke-width="2"/></g>',
+  fan: '<path d="M212 225L242 200A34 34 0 0 1 245 245Z" fill="#ffe4f1" stroke="#d882ae" stroke-width="2.5"/>',
+  parasol: '<g><path d="M216 232L244 148" stroke="#c49bdc" stroke-width="4" stroke-linecap="round"/><path d="M196 156Q244 114 276 172Q244 162 224 168Q208 160 196 156Z" fill="#ffd9ec" stroke="#d882ae" stroke-width="2.5"/></g>',
+  bouquet: '<g transform="translate(196 218)"><path d="M6 16L22 44L34 14Z" fill="#f7e3c6" stroke="#c7a173" stroke-width="2"/><circle cx="12" cy="12" r="7" fill="#ff8fb8"/><circle cx="24" cy="10" r="7" fill="#ffb8d4"/><circle cx="18" cy="18" r="7" fill="#d8b4fe"/></g>',
+  wings: '<g opacity=".78"><path d="M112 162Q46 116 56 184Q66 216 112 194Z" fill="#dff2ff" stroke="#9ec9f5" stroke-width="2.5"/><path d="M188 162Q254 116 244 184Q234 216 188 194Z" fill="#dff2ff" stroke="#9ec9f5" stroke-width="2.5"/></g>',
+  none: ''
+ };
+
+ const crown = crownMap[state.crown] || '';
+ const extra = extraMap[state.extras] || '';
+ const shoeShape = `<path d="M119 365Q133 358 147 369L150 384Q132 394 111 384Q108 375 119 365ZM158 369Q174 358 186 367L194 384Q177 395 158 386Z" fill="${sc}" stroke="#a77d9e" stroke-width="2.5"/><path d="M119 378q13 6 27 0M163 378q13 6 25 0" stroke="#fff" stroke-width="3" fill="none"/>`;
+
+ return `<defs>
+  <linearGradient id="dressTop" x2="0" y2="1"><stop stop-color="${top}"/><stop offset="1" stop-color="${skirt}"/></linearGradient>
+  <linearGradient id="skinTone" x2="0" y2="1"><stop stop-color="${profile.skin}"/><stop offset="1" stop-color="#eeb89f"/></linearGradient>
+ </defs>
+ ${state.extras === 'wings' ? extra : ''}
+ <ellipse cx="150" cy="390" rx="68" ry="9" fill="#9c7ab4" opacity=".18"/>
+ <path d="M128 292Q123 329 127 367L143 370Q151 332 149 292ZM153 292Q151 333 162 370L178 367Q178 327 172 292Z" fill="url(#skinTone)" stroke="#dba38d" stroke-width="2"/>
+ ${shoeShape}
+ ${backHair}
+ <path d="M119 143Q99 145 91 170L77 216Q74 229 85 232Q94 234 99 222L119 187L132 164ZM181 143Q201 145 209 170L223 216Q226 229 215 232Q206 234 201 222L181 187L168 164Z" fill="url(#skinTone)" stroke="#dfa993" stroke-width="2.5"/>
+ <path d="M119 194Q105 243 72 323Q150 361 228 323Q195 243 181 194Z" fill="url(#dressTop)" stroke="#fff" stroke-width="3"/>
+ <path d="M92 309Q150 337 208 309M111 270Q150 288 189 270" fill="none" stroke="#fff" stroke-width="4" opacity=".65"/>
+ <path d="M119 137Q150 151 181 137L192 208Q150 225 108 208Z" fill="${top}" stroke="#fff" stroke-width="3"/>
+ <path d="M119 145Q101 136 91 158L101 188L122 180ZM181 145Q199 136 209 158L199 188L178 180Z" fill="${skirt}" stroke="#fff" stroke-width="3"/>
+ <path d="M132 143Q150 166 168 143" fill="none" stroke="#fff" stroke-width="4"/>
+ <path d="M150 169l9 12-9 12-9-12Z" fill="#fff4fb" stroke="#fff" stroke-width="1.5"/>
+ <path d="M139 117L139 146Q150 158 161 146L161 117Z" fill="url(#skinTone)"/>
+ <ellipse cx="150" cy="94" rx="37" ry="45" fill="url(#skinTone)" stroke="#dfa994" stroke-width="1.5"/>
+ <path d="M112 83Q103 38 150 34Q198 35 188 86Q179 68 163 66Q145 76 126 66Q119 77 112 83Z" fill="${hc}" stroke="#593c44" stroke-width="2.5"/>
+ <path d="M112 79Q100 97 111 127M188 79Q200 97 189 127" fill="none" stroke="${hc}" stroke-width="11" stroke-linecap="round"/>
+ <g>
+  <path d="M120 91Q133 78 147 91Q134 105 120 91Z" fill="#fff"/>
+  <path d="M153 91Q167 78 180 91Q166 105 153 91Z" fill="#fff"/>
+  <ellipse cx="135" cy="92" rx="7.4" ry="10" fill="${profile.eye}"/>
+  <ellipse cx="165" cy="92" rx="7.4" ry="10" fill="${profile.eye}"/>
+  <ellipse cx="135" cy="94" rx="3.2" ry="5.8" fill="#342d48"/>
+  <ellipse cx="165" cy="94" rx="3.2" ry="5.8" fill="#342d48"/>
+  <circle cx="138" cy="87" r="3.2" fill="#fff"/>
+  <circle cx="168" cy="87" r="3.2" fill="#fff"/>
+  <path d="M119 89Q132 76 148 88M152 88Q168 76 181 89" fill="none" stroke="#573b46" stroke-width="3.2" stroke-linecap="round"/>
+ </g>
+ <ellipse cx="119" cy="111" rx="10" ry="6" fill="${blush}" opacity=".58"/>
+ <ellipse cx="181" cy="111" rx="10" ry="6" fill="${blush}" opacity=".58"/>
+ <path d="M140 119Q150 127 160 119Q155 132 150 130Q145 130 140 119Z" fill="#d96f8c" stroke="#b95e7d" stroke-width="1.3"/>
+ ${crown}${state.extras === 'wings' ? '' : extra}`;
+}
+
+// PET SYSTEM & SVG BUILDER
+function syncPetChoiceButtons() {
+ document.querySelectorAll('#petChoices button').forEach(b => {
+  const match = (b.getAttribute('onclick') || '').includes(`'${state.pet.emoji}'`);
+  b.classList.toggle('selected', match);
+ });
+}
+function adoptPet(emoji, name) {
+ state.ownedPets = Array.from(new Set([...(state.ownedPets || []), emoji]));
+ state.pet.emoji = emoji;
+ state.pet.name = name;
+ state.pet.hunger = 75;
+ state.pet.happy = 85;
+ state.pet.clean = 85;
+ syncPetChoiceButtons();
+ renderPet();
+ renderRoom();
+ saveState();
+ showToast('You adopted ' + name + '! ♡');
+}
+
+function renamePet() {
+ const n = document.getElementById('petNameInput').value.trim();
+ if (!n) return showToast('Write a name first ♡');
+ state.pet.name = n.slice(0, 18);
+ renderPet();
+ saveState();
+ showToast('Saved name: ' + state.pet.name + ' ♡');
+}
+
+function carePet(action) {
+ const p = state.pet;
+ if (action === 'feed') { p.hunger = Math.min(100, p.hunger + 20); p.happy = Math.min(100, p.happy + 5); }
+ if (action === 'play') { p.happy = Math.min(100, p.happy + 18); p.hunger = Math.max(0, p.hunger - 6); p.energy = Math.max(0, (p.energy ?? 80) - 10); }
+ if (action === 'bath') { p.clean = Math.min(100, p.clean + 25); p.happy = Math.min(100, p.happy + 5); }
+ if (action === 'groom') { p.clean = Math.min(100, p.clean + 18); p.happy = Math.min(100, p.happy + 10); }
+ if (action === 'sleep') { p.energy = Math.min(100, (p.energy ?? 80) + 35); p.happy = Math.min(100, p.happy + 6); }
+ if (action === 'hug') { p.happy = Math.min(100, p.happy + 15); }
+
+ const fx = document.getElementById('petActionFx');
+ const effects = { feed: '🍓', bath: '🫧', play: '⭐', groom: '✨', sleep: '💤', hug: '💗' };
+ if (fx) {
+  fx.textContent = effects[action] || '💖';
+  fx.classList.remove('play');
+  void fx.offsetWidth;
+  fx.classList.add('play');
+ }
+ renderPet();
+ addCoins(3);
+ saveState();
+ showToast(p.name + ' senang banget! +3 coins ♡');
+}
+
+function buildPetSVG(emoji) {
+ const palettes = {
+  '🐰': { fur: '#fff6f9', shade: '#f3dce6', line: '#b87c96', cheek: '#f79ec2', accent: '#ffc2dc' },
+  '🐱': { fur: '#fbd5b5', shade: '#ecc09b', line: '#9c6854', cheek: '#f49ca5', accent: '#f8b9c2' },
+  '🐻': { fur: '#c8926d', shade: '#b27a56', line: '#6d4733', cheek: '#ea9f86', accent: '#e3bfa2' },
+  '🐶': { fur: '#f0cfa0', shade: '#dcb683', line: '#8e623f', cheek: '#ef9c95', accent: '#fff4e2' },
+  '🦊': { fur: '#f18c54', shade: '#da723b', line: '#8f4324', cheek: '#f7b286', accent: '#fff5eb' },
+  '🐼': { fur: '#f7f5f2', shade: '#e3dfe8', line: '#3a3442', cheek: '#f19cb0', accent: '#3a3442' },
+  '🐹': { fur: '#f3cfa9', shade: '#e0b88e', line: '#8d644c', cheek: '#f29ea6', accent: '#ffe8d6' },
+  '🦆': { fur: '#ffe89c', shade: '#f2d374', line: '#9d762b', cheek: '#f499a6', accent: '#ff9e5e' },
+  '🦌': { fur: '#d49866', shade: '#bc7f4f', line: '#74492d', cheek: '#ee9ca6', accent: '#fff3e6' },
+  '🦄': { fur: '#f8e2fc', shade: '#e5c6ec', line: '#8d64a8', cheek: '#f59ec4', accent: '#ffe17d' }
+ };
+ const c = palettes[emoji] || palettes['🐰'];
+
+ const tailMap = {
+  '🐰': `<circle cx="176" cy="146" r="13" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/><circle cx="180" cy="143" r="6" fill="${c.shade}"/>`,
+  '🐱': `<path d="M174 148Q208 134 205 102Q203 84 190 88Q182 91 187 104Q191 124 170 137Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>`,
+  '🐻': `<circle cx="174" cy="149" r="9" fill="${c.shade}" stroke="${c.line}" stroke-width="2.8"/>`,
+  '🐶': `<path d="M175 138Q204 114 199 94Q194 84 185 95Q180 112 169 128Z" fill="${c.shade}" stroke="${c.line}" stroke-width="3"/>`,
+  '🦊': `<path d="M172 146Q216 144 214 112Q212 92 192 98Q178 106 168 132Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/><path d="M204 97Q215 96 214 112Q206 113 199 104Z" fill="${c.accent}"/>`,
+  '🐼': `<circle cx="175" cy="148" r="9.5" fill="#3a3442" stroke="#26212c" stroke-width="2.5"/>`,
+  '🐹': `<circle cx="175" cy="151" r="6.5" fill="${c.accent}" stroke="${c.line}" stroke-width="2.2"/>`,
+  '🦆': `<path d="M172 144L198 131L186 154Z" fill="${c.shade}" stroke="${c.line}" stroke-width="2.8"/>`,
+  '🦌': `<path d="M174 143L193 135L183 153Z" fill="${c.fur}" stroke="${c.line}" stroke-width="2.8"/><path d="M177 145L190 139L183 150Z" fill="#fff6ec"/>`,
+  '🦄': `<path d="M174 139Q214 128 209 94Q205 78 192 88Q196 108 184 122Q198 126 196 146Q182 152 170 145Z" fill="#e8b8f5" stroke="${c.line}" stroke-width="2.8"/>`
+ };
+
+ const backLimbFill = emoji === '🐼' ? '#3a3442' : c.shade;
+ const frontLimbFill = emoji === '🐼' ? '#3a3442' : c.fur;
+
+ const bodyAndLimbs = `
+  ${tailMap[emoji] || tailMap['🐰']}
+  <path d="M104 146L98 186Q97 194 107 194L115 194L117 152Z" fill="${c.shade}" stroke="${c.line}" stroke-width="2.8"/>
+  <path d="M154 146L158 186Q159 194 169 194L176 194L168 150Z" fill="${backLimbFill}" stroke="${c.line}" stroke-width="2.8"/>
+  <path d="M96 112Q84 126 88 152Q92 168 118 168L156 168Q180 166 178 140Q176 116 154 110Q128 104 96 112Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3.2" stroke-linejoin="round"/>
+  <path d="M98 122Q91 142 104 158Q120 164 132 152Q122 130 98 122Z" fill="${c.shade}" opacity=".45"/>
+  <path d="M144 122Q172 124 173 154L175 189Q175 196 164 196L152 196Q144 196 145 186L145 156Z" fill="${backLimbFill}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>
+  <ellipse cx="159" cy="194" rx="13" ry="5.5" fill="${backLimbFill}" stroke="${c.line}" stroke-width="2.6"/>
+  <path d="M95 124L88 185Q87 195 98 195L108 195Q114 195 114 186L115 134Z" fill="${frontLimbFill}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>
+  <ellipse cx="100" cy="194" rx="12" ry="5.5" fill="${frontLimbFill}" stroke="${c.line}" stroke-width="2.6"/>
+  <path d="M95 191v5M101 191v5M154 191v5M160 191v5" stroke="${c.line}" stroke-width="1.8" stroke-linecap="round"/>
+ `;
+
+ let headBlock = '';
+ if (emoji === '🐰') {
+  headBlock = `
+   <path d="M98 76Q72 10 92 14Q110 18 112 74Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <path d="M97 68Q82 22 93 24Q104 26 105 68Z" fill="${c.accent}"/>
+   <path d="M124 75Q138 12 156 18Q168 24 140 78Z" fill="${c.shade}" stroke="${c.line}" stroke-width="3"/>
+   <path d="M129 68Q141 26 151 28Q158 32 136 72Z" fill="${c.accent}"/>
+   <path d="M84 96Q84 70 116 70Q148 70 148 98Q148 122 116 122Q84 122 84 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+  `;
+ } else if (emoji === '🐱') {
+  headBlock = `
+   <path d="M88 82L84 42L114 70Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>
+   <path d="M92 77L89 51L108 70Z" fill="${c.accent}"/>
+   <path d="M122 70L150 42L144 82Z" fill="${c.shade}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>
+   <path d="M126 70L144 51L140 77Z" fill="${c.accent}"/>
+   <path d="M82 96Q82 68 116 68Q150 68 150 96Q150 121 116 121Q82 121 82 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <path d="M74 96l16 2M74 104l16-1M142 97l16-2M142 103l16 1" stroke="${c.line}" stroke-width="2" stroke-linecap="round"/>
+  `;
+ } else if (emoji === '🐻') {
+  headBlock = `
+   <circle cx="88" cy="73" r="13" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <circle cx="88" cy="73" r="6.5" fill="${c.accent}"/>
+   <circle cx="142" cy="73" r="13" fill="${c.shade}" stroke="${c.line}" stroke-width="3"/>
+   <circle cx="142" cy="73" r="6.5" fill="${c.accent}"/>
+   <path d="M83 96Q83 70 116 70Q149 70 149 96Q149 121 116 121Q83 121 83 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <ellipse cx="103" cy="105" rx="13" ry="9.5" fill="${c.accent}" stroke="${c.line}" stroke-width="2"/>
+  `;
+ } else if (emoji === '🐶') {
+  headBlock = `
+   <path d="M84 96Q84 70 116 70Q148 70 148 96Q148 121 116 121Q84 121 84 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <path d="M86 80Q68 94 74 124Q81 132 91 116Z" fill="${c.shade}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>
+   <path d="M144 80Q162 94 156 124Q149 132 139 116Z" fill="${c.shade}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>
+   <ellipse cx="102" cy="105" rx="14" ry="9.5" fill="${c.accent}" stroke="${c.line}" stroke-width="2"/>
+  `;
+ } else if (emoji === '🦊') {
+  headBlock = `
+   <path d="M86 82L78 36L113 69Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>
+   <path d="M88 73L82 44L106 68Z" fill="#3a3442"/>
+   <path d="M122 69L154 38L145 83Z" fill="${c.shade}" stroke="${c.line}" stroke-width="3" stroke-linejoin="round"/>
+   <path d="M82 96Q84 70 116 70Q148 70 148 96Q142 118 116 120Q92 120 82 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <path d="M83 100Q98 120 118 119Q104 105 83 100Z" fill="${c.accent}"/>
+  `;
+ } else if (emoji === '🐼') {
+  headBlock = `
+   <circle cx="88" cy="73" r="13" fill="#3a3442" stroke="#241f2b" stroke-width="2.5"/>
+   <circle cx="142" cy="73" r="13" fill="#3a3442" stroke="#241f2b" stroke-width="2.5"/>
+   <path d="M83 96Q83 70 116 70Q149 70 149 96Q149 121 116 121Q83 121 83 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <ellipse cx="98" cy="95" rx="9" ry="11" transform="rotate(-14 98 95)" fill="#3a3442"/>
+   <ellipse cx="126" cy="95" rx="9" ry="11" transform="rotate(14 126 95)" fill="#3a3442"/>
+  `;
+ } else if (emoji === '🐹') {
+  headBlock = `
+   <circle cx="88" cy="77" r="10" fill="${c.fur}" stroke="${c.line}" stroke-width="2.8"/>
+   <circle cx="88" cy="77" r="5" fill="${c.accent}"/>
+   <circle cx="140" cy="77" r="10" fill="${c.shade}" stroke="${c.line}" stroke-width="2.8"/>
+   <circle cx="140" cy="77" r="5" fill="${c.accent}"/>
+   <path d="M81 98Q81 73 115 73Q149 73 149 98Q149 121 115 121Q81 121 81 98Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+  `;
+ } else if (emoji === '🦆') {
+  headBlock = `
+   <path d="M84 96Q84 68 116 68Q146 68 146 96Q146 118 116 119Q84 119 84 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <path d="M86 98Q68 98 68 107Q68 115 88 113Z" fill="${c.accent}" stroke="${c.line}" stroke-width="2.6"/>
+  `;
+ } else if (emoji === '🦌') {
+  headBlock = `
+   <path d="M102 72L92 44M92 54L80 48M96 48L94 36" stroke="${c.line}" stroke-width="4" stroke-linecap="round"/>
+   <path d="M128 72L140 44M140 54L152 48M136 48L138 36" stroke="${c.line}" stroke-width="4" stroke-linecap="round"/>
+   <ellipse cx="80" cy="84" rx="13" ry="6.5" transform="rotate(-22 80 84)" fill="${c.fur}" stroke="${c.line}" stroke-width="2.8"/>
+   <ellipse cx="150" cy="84" rx="13" ry="6.5" transform="rotate(22 150 84)" fill="${c.shade}" stroke="${c.line}" stroke-width="2.8"/>
+   <path d="M84 96Q84 70 116 70Q148 70 148 96Q148 121 116 121Q84 121 84 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+  `;
+ } else {
+  headBlock = `
+   <path d="M88 82L84 48L111 71Z" fill="${c.fur}" stroke="${c.line}" stroke-width="2.8"/>
+   <path d="M122 71L146 48L142 82Z" fill="${c.shade}" stroke="${c.line}" stroke-width="2.8"/>
+   <path d="M111 72L116 32L123 72Z" fill="${c.accent}" stroke="${c.line}" stroke-width="2.6"/>
+   <path d="M84 96Q84 70 116 70Q148 70 148 96Q148 121 116 121Q84 121 84 96Z" fill="${c.fur}" stroke="${c.line}" stroke-width="3"/>
+   <path d="M128 74Q154 88 148 122Q136 126 132 104Z" fill="#e8b8f5" stroke="${c.line}" stroke-width="2.5"/>
+  `;
+ }
+
+ const noseY = emoji === '🦆' ? 102 : 103;
+ const noseX = emoji === '🦆' ? 76 : 103;
+
+ return `
+  <ellipse cx="128" cy="201" rx="64" ry="8.5" fill="#9679a6" opacity=".18"/>
+  ${bodyAndLimbs}
+  ${headBlock}
+  <ellipse cx="97" cy="94" rx="4.8" ry="6.2" fill="#3a3244"/>
+  <ellipse cx="126" cy="94" rx="4.8" ry="6.2" fill="#3a3244"/>
+  <circle cx="98.6" cy="91.8" r="1.9" fill="#fff"/>
+  <circle cx="127.6" cy="91.8" r="1.9" fill="#fff"/>
+  <ellipse cx="89" cy="107" rx="8" ry="4.8" fill="${c.cheek}" opacity=".7"/>
+  <ellipse cx="134" cy="107" rx="8" ry="4.8" fill="${c.cheek}" opacity=".7"/>
+  <ellipse cx="${noseX}" cy="${noseY}" rx="4.2" ry="3" fill="${c.line}"/>
+  <path d="M103 106q-5 7-11 1M103 106q5 7 11 1" fill="none" stroke="${c.line}" stroke-width="2.2" stroke-linecap="round"/>
+ `;
+}
+
+function renderPet() {
+ const p = state.pet;
+ syncPetChoiceButtons();
+ const svg = buildPetSVG(p.emoji);
+ const petArtEl = document.getElementById('petArt');
+ const homePetArtEl = document.getElementById('homePetArt');
+ const roomPetGuestEl = document.getElementById('roomPetGuest');
+ if (petArtEl) petArtEl.innerHTML = svg;
+ if (homePetArtEl) homePetArtEl.innerHTML = svg;
+ if (roomPetGuestEl) roomPetGuestEl.innerHTML = svg;
+ document.getElementById('petName').textContent = p.name;
+ [['hunger', p.hunger], ['happy', p.happy], ['clean', p.clean], ['energy', p.energy ?? 80]].forEach(([k, v]) => {
+  const bar = document.getElementById(k + 'Bar');
+  const val = document.getElementById(k + 'Val');
+  if (bar) bar.style.width = v + '%';
+  if (val) val.textContent = v;
+ });
+ document.getElementById('petMood').textContent = p.happy > 70 ? 'ceria & menggemaskan ♡' : 'butuh perhatianmu';
+ const msg = document.getElementById('careMessage');
+ if (msg) {
+  msg.textContent = p.hunger < 30 ? `${p.name} lapar nih! 🍓`
+   : (p.energy ?? 80) < 25 ? `${p.name} ngantuk, coba Sleep ya 🌙`
+   : p.clean < 30 ? `${p.name} mau mandi dulu 🫧`
+   : `${p.name} sayang banget sama kamu! 💗`;
+ }
+}
+
+// INTERACTIVE COZY ROOM BUILDER
+const roomThemes = [
+ { name: 'Pastel Cloud Room', win: '☁️ ✨ ☁️', wall: 'linear-gradient(180deg, #dff2ff 0 60%, #f6dff0 60%)', floor: 'repeating-linear-gradient(90deg, #f4cddd 0 42px, #f9e6ed 42px 84px)' },
+ { name: 'Sakura Blossom Room', win: '🌸 ☀️ 🌸', wall: 'linear-gradient(180deg, #ffe6f2 0 60%, #fff0f7 60%)', floor: 'repeating-linear-gradient(90deg, #f7cad0 0 42px, #fde2e4 42px 84px)' },
+ { name: 'Midnight Starlight Room', win: '🌙 ⭐ ✧', wall: 'linear-gradient(180deg, #2b234a 0 60%, #1e1938 60%)', floor: 'repeating-linear-gradient(90deg, #3c3263 0 42px, #322954 42px 84px)' }
+];
+const decorCatalog = [
+ ['🛏️', 'Cozy Bed', 0],
+ ['🧸', 'Teddy Bear', 0],
+ ['🌷', 'Tulip Vase', 0],
+ ['🪴', 'Potted Plant', 0],
+ ['🕯️', 'Candle', 12],
+ ['🪞', 'Mirror', 15],
+ ['🎀', 'Ribbon', 10],
+ ['🍰', 'Cake', 14],
+ ['💐', 'Bouquet', 16],
+ ['🌙', 'Moon Lamp', 18],
+ ['🛋️', 'Velvet Sofa', 22],
+ ['📚', 'Book Shelf', 20]
+];
+
+function renderRoom() {
+ const theme = roomThemes[(state.roomTheme || 0) % roomThemes.length];
+ const preview = document.getElementById('roomPreview');
+ const win = document.getElementById('roomWindow');
+ const floor = document.getElementById('roomFloor');
+ const label = document.getElementById('roomThemeLabel');
+ if (preview) preview.style.background = theme.wall;
+ if (win) win.textContent = theme.win;
+ if (floor) floor.style.background = theme.floor;
+ if (label) label.textContent = theme.name;
+
+ const petGuest = document.getElementById('roomPetGuest');
+ if (petGuest) petGuest.innerHTML = buildPetSVG(state.pet.emoji);
+
+ const placed = document.getElementById('roomPlaced');
+ if (placed) {
+  placed.innerHTML = (state.roomItems || []).map((emoji, idx) =>
+   `<button class="room-furniture-chip" onclick="removeRoomItem(${idx})" title="Klik untuk lepas">${emoji}</button>`
+  ).join('');
+ }
+
+ const ownedCount = document.getElementById('decorOwned');
+ if (ownedCount) ownedCount.textContent = (state.decorOwned || []).length + ' dimiliki';
+
+ const shop = document.getElementById('decorShop');
+ if (shop) {
+  shop.innerHTML = decorCatalog.map(([emoji, name, price]) => {
+   const owned = (state.decorOwned || []).includes(emoji);
+   return `
+    <button class="item-btn" onclick="buyOrPlaceDecor('${emoji}', '${name}', ${price})">
+     <span style="font-size:24px">${emoji}</span><br>
+     <strong>${name}</strong><br>
+     <small>${owned ? '✓ Pasang' : '♡ ' + price + ' coins'}</small>
+    </button>
+   `;
+  }).join('');
+ }
+}
+
+function buyOrPlaceDecor(emoji, name, price) {
+ state.decorOwned = state.decorOwned || [];
+ state.roomItems = state.roomItems || [];
+ if (!state.decorOwned.includes(emoji)) {
+  if (state.coins < price) return showToast(`Butuh ${price} coins untuk ${name} ♡`);
+  state.coins -= price;
+  state.decorOwned.push(emoji);
+  showToast(`Membeli ${name}! ✨`);
+ } else {
+  showToast(`${name} ditaruh di kamar ♡`);
+ }
+ if (state.roomItems.length >= 10) state.roomItems.shift();
+ state.roomItems.push(emoji);
+ saveState();
+ renderRoom();
+}
+
+function removeRoomItem(idx) {
+ state.roomItems.splice(idx, 1);
+ saveState();
+ renderRoom();
+}
+
+function cycleRoomTheme() {
+ state.roomTheme = ((state.roomTheme || 0) + 1) % roomThemes.length;
+ saveState();
+ renderRoom();
+}
+
+function shuffleRoom() {
+ const owned = state.decorOwned || ['🛏️', '🧸', '🌷', '🪴'];
+ state.roomItems = [...owned].sort(() => Math.random() - 0.5).slice(0, 6);
+ saveState();
+ renderRoom();
+ showToast('Kamar ditata ulang ✨');
+}
+
+// POLAROID GALLERY
+document.getElementById('photoFileInput')?.addEventListener('change', e => {
+ const files = Array.from(e.target.files || []);
+ const customCap = document.getElementById('photoUploadCaption').value.trim();
+ const chosenFrame = document.getElementById('photoUploadFrame').value;
+ const chosenSize = document.getElementById('photoUploadSize').value || 'md';
+ files.forEach((file, i) => {
+  const reader = new FileReader();
+  reader.onload = ev => {
+   const fallbackName = file.name.replace(/\.[^/.]+$/, '') || 'sweet memory ♡';
+   state.gallery.push({
+    type: 'photo',
+    src: ev.target.result,
+    caption: customCap ? (files.length > 1 ? `${customCap} (${i + 1})` : customCap) : fallbackName,
+    frame: chosenFrame,
+    size: chosenSize,
+    date: new Date().toLocaleDateString('id-ID')
+   });
+   saveState();
+   renderGallery();
+   showToast('Foto polaroid ditambahkan dengan caption! 📷');
+  };
+  reader.readAsDataURL(file);
+ });
+ document.getElementById('photoUploadCaption').value = '';
+ e.target.value = '';
+});
+
+function addEmojiGallery() {
+ const emoji = document.getElementById('galleryEmoji').value || '🌸';
+ const cap = document.getElementById('galleryCaption').value.trim() || 'little sweet moment ♡';
+ const chosenFrame = document.getElementById('photoUploadFrame').value || 'blue-frame';
+ const chosenSize = document.getElementById('photoUploadSize').value || 'md';
+ state.gallery.push({
+  type: 'emoji',
+  emoji,
+  caption: cap,
+  frame: chosenFrame,
+  size: chosenSize,
+  date: new Date().toLocaleDateString('id-ID')
+ });
+ document.getElementById('galleryCaption').value = '';
+ saveState();
+ renderGallery();
+ showToast('Polaroid ditambahkan ♡');
+}
+
+function cyclePolaroidFrame(idx, ev) {
+ ev.stopPropagation();
+ const frames = ['', 'pink-frame', 'blue-frame', 'lavender-frame'];
+ const cur = state.gallery[idx].frame || '';
+ state.gallery[idx].frame = frames[(frames.indexOf(cur) + 1) % frames.length];
+ saveState();
+ renderGallery();
+}
+
+function cyclePolaroidSize(idx, ev) {
+ ev.stopPropagation();
+ const sizes = ['sm', 'md', 'lg'];
+ const cur = state.gallery[idx].size || 'md';
+ state.gallery[idx].size = sizes[(sizes.indexOf(cur) + 1) % sizes.length];
+ saveState();
+ renderGallery();
+}
+
+function movePolaroid(idx, dir, ev) {
+ ev.stopPropagation();
+ const target = idx + dir;
+ if (target < 0 || target >= state.gallery.length) return;
+ const temp = state.gallery[idx];
+ state.gallery[idx] = state.gallery[target];
+ state.gallery[target] = temp;
+ saveState();
+ renderGallery();
+}
+
+function setPolaroidLayout(mode) {
+ state.polaroidLayout = mode;
+ saveState();
+ renderGallery();
+}
+
+function deletePolaroid(idx, ev) {
+ ev.stopPropagation();
+ state.gallery.splice(idx, 1);
+ saveState();
+ renderGallery();
+}
+
+function escapeHTML(str) {
+ return String(str || '').replace(/[&<>"']/g, ch => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+ }[ch]));
+}
+
+function openLightbox(idx) {
+ const item = state.gallery[idx];
+ if (!item) return;
+ const mediaEl = document.getElementById('lightboxMedia');
+ const capEl = document.getElementById('lightboxCaption');
+ if (mediaEl) {
+  if (item.type === 'photo' && item.src) {
+   mediaEl.innerHTML = `<img src="${item.src}" alt="${escapeHTML(item.caption || 'Polaroid')}">`;
+  } else {
+   mediaEl.innerHTML = `<div class="lightbox-emoji">${escapeHTML(item.emoji || '🌸')}</div>`;
+  }
+ }
+ if (capEl) {
+  capEl.textContent = item.caption || 'sweet memory ♡';
+ }
+ document.getElementById('lightbox')?.classList.add('open');
+}
+
+function renderGallery() {
+ const grid = document.getElementById('galleryGrid');
+ if (!grid) return;
+ const layout = state.polaroidLayout || 'scrapbook';
+ grid.className = `polaroid-grid layout-${layout}`;
+
+ ['scrapbook', 'grid', 'masonry'].forEach(mode => {
+  const btn = document.getElementById('layout' + mode[0].toUpperCase() + mode.slice(1) + 'Btn');
+  if (btn) btn.style.background = layout === mode ? 'var(--hover-pill)' : '';
+ });
+
+ const countLbl = document.getElementById('polaroidCountLabel');
+ if (countLbl) countLbl.textContent = `${(state.gallery || []).length} kenangan tersimpan`;
+
+ const sizeBadge = { sm: 'S', md: 'M', lg: 'L' };
+ grid.innerHTML = (state.gallery || []).map((item, idx) => {
+  const sz = item.size || 'md';
+  const safeCaption = escapeHTML(item.caption || '');
+  const safeDate = escapeHTML(item.date || '');
+  const safeEmoji = escapeHTML(item.emoji || '🌸');
+  return `
+  <div class="polaroid ${item.frame || ''} size-${sz}" onclick="openLightbox(${idx})">
+   <div class="polaroid-tape"></div>
+   <div class="polaroid-tools">
+    <button class="p-tool" onclick="cyclePolaroidSize(${idx}, event)" title="Ubah Ukuran (S/M/L)">${sizeBadge[sz]}</button>
+    <button class="p-tool" onclick="cyclePolaroidFrame(${idx}, event)" title="Ganti Bingkai">🎨</button>
+    <button class="p-tool" onclick="deletePolaroid(${idx}, event)" title="Hapus">×</button>
+   </div>
+   <div class="polaroid-media">
+    ${item.type === 'photo' && item.src ? `<img src="${item.src}" alt="${safeCaption}">` : `<span>${safeEmoji}</span>`}
+   </div>
+   <input class="polaroid-cap-input" value="${safeCaption}" placeholder="Tulis caption..." onclick="event.stopPropagation()" onchange="state.gallery[${idx}].caption=this.value;saveState()">
+   <small class="polaroid-date">${safeDate}</small>
+   <div class="polaroid-move-bar" onclick="event.stopPropagation()">
+    <button class="p-tool" onclick="movePolaroid(${idx}, -1, event)" title="Geser Kiri" ${idx === 0 ? 'disabled' : ''}>◀</button>
+    <button class="p-tool" onclick="movePolaroid(${idx}, 1, event)" title="Geser Kanan" ${idx === state.gallery.length - 1 ? 'disabled' : ''}>▶</button>
+   </div>
+  </div>
+ `;
+ }).join('') || '<p class="muted">Belum ada polaroid. Tulis caption & upload foto pertamamu di atas!</p>';
+}
+
+// MULTI-SPOTIFY PLAYLIST EMBEDS
+function addSpotifyEmbed() {
+ const raw = document.getElementById('spotifyUrl').value.trim();
+ const match = raw.match(/open\.spotify\.com\/(track|playlist|album|episode)\/([a-zA-Z0-9]+)/);
+ if (!match) return showToast('Masukkan link Spotify yang valid ya 🎧');
+ state.spotifyEmbeds.push({ type: match[1], id: match[2] });
+ document.getElementById('spotifyUrl').value = '';
+ saveState();
+ renderSpotifyEmbeds();
+ showToast('Playlist Spotify ditambahkan! 🎧');
+}
+
+function removeSpotifyEmbed(idx) {
+ state.spotifyEmbeds.splice(idx, 1);
+ saveState();
+ renderSpotifyEmbeds();
+}
+
+function renderSpotifyEmbeds() {
+ const list = document.getElementById('spotifyEmbedList');
+ if (!list) return;
+ list.innerHTML = (state.spotifyEmbeds || []).map((s, idx) => `
+  <div class="spotify-card">
+   <button class="spotify-del" onclick="removeSpotifyEmbed(${idx})" title="Hapus">×</button>
+   <iframe style="border-radius:12px" src="https://open.spotify.com/embed/${s.type}/${s.id}?utm_source=generator" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+ `).join('') || '<p class="muted">Belum ada embed Spotify.</p>';
+}
+
+// FOCUS TIMER & RAIN SOUND
+let timerSeconds = 25 * 60, timerInterval = null, rainNode = null, rainGain = null, rainOn = false;
+function formatTime(sec) {
+ const m = String(Math.floor(sec / 60)).padStart(2, '0');
+ const s = String(sec % 60).padStart(2, '0');
+ return `${m}:${s}`;
+}
+function updateTimerDisplay() {
+ const el = document.getElementById('timerDisplay');
+ if (el) el.textContent = formatTime(timerSeconds);
+}
+function startTimer() {
+ if (timerInterval) return;
+ document.getElementById('timerLabel').textContent = 'Stay cozy & focused... ✧';
+ timerInterval = setInterval(() => {
+  if (timerSeconds > 0) {
+   timerSeconds--;
+   updateTimerDisplay();
+  } else {
+   pauseTimer();
+   addCoins(10);
+   document.getElementById('timerLabel').textContent = 'Sesi selesai! +10 coins ♡';
+   showToast('Sesi fokus selesai! +10 coins ♡');
+  }
+ }, 1000);
+}
+function pauseTimer() {
+ clearInterval(timerInterval);
+ timerInterval = null;
+ document.getElementById('timerLabel').textContent = 'Paused gently';
+}
+function resetTimer() {
+ pauseTimer();
+ const mins = parseInt(document.getElementById('timerLength')?.value || '25', 10);
+ timerSeconds = mins * 60;
+ updateTimerDisplay();
+ document.getElementById('timerLabel').textContent = 'A cozy focus session';
+}
+function toggleRain() {
+ const btn = document.getElementById('rainBtn');
+ if (rainOn) {
+  rainOn = false;
+  if (rainGain && ambientAudio) rainGain.gain.setTargetAtTime(0.0001, ambientAudio.currentTime, 0.08);
+  if (btn) btn.textContent = '🌧️ Rain: off';
+  return;
+ }
+ const ctx = initAudio();
+ if (!ctx) return showToast('Audio not supported');
+ if (ctx.state === 'suspended') ctx.resume();
+ if (!rainNode) {
+  const bufferSize = ctx.sampleRate * 2;
+  const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const output = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+  const whiteNoise = ctx.createBufferSource();
+  whiteNoise.buffer = noiseBuffer;
+  whiteNoise.loop = true;
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.value = 900;
+  rainGain = ctx.createGain();
+  rainGain.gain.value = 0.04;
+  whiteNoise.connect(filter);
+  filter.connect(rainGain);
+  rainGain.connect(ctx.destination);
+  whiteNoise.start(0);
+  rainNode = whiteNoise;
+ } else if (rainGain) {
+  rainGain.gain.setTargetAtTime(0.04, ctx.currentTime, 0.08);
+ }
+ rainOn = true;
+ if (btn) btn.textContent = '🌧️ Rain: on';
+}
+
+// FLOATING MOCHI BUNNY COMPANION
+const mochiQuotes = [
+ 'jangan lupa minum air putih ya hari ini! 💧',
+ 'kamu sudah melakukan yang terbaik hari ini ♡',
+ 'pelan-pelan aja, bunga juga butuh waktu mekar 🌷',
+ 'yuk mampir ke Room Builder untuk hias kamar kita! 🏡',
+ 'semesta punya kejutan manis buatmu ✨'
+];
+let mochiSpeechTimer = null;
+function showMochiSpeech(txt) {
+ const b = document.getElementById('mochiBubble');
+ b.textContent = txt;
+ b.classList.add('show');
+ clearTimeout(mochiSpeechTimer);
+ mochiSpeechTimer = setTimeout(() => b.classList.remove('show'), 3600);
+}
+function setFloatingBunnyExpr(mode) {
+ document.getElementById('fBunnyEyesNormal').style.display = mode === 'normal' ? 'block' : 'none';
+ document.getElementById('fBunnyEyesHappy').style.display = mode !== 'normal' ? 'block' : 'none';
+ document.getElementById('fBunnyMouthNormal').style.display = mode !== 'eat' ? 'block' : 'none';
+ document.getElementById('fBunnyMouthEat').style.display = mode === 'eat' ? 'block' : 'none';
+ if (mode !== 'normal') setTimeout(() => setFloatingBunnyExpr('normal'), 2400);
+}
+document.getElementById('mochiAvatarBtn').onclick = () => {
+ setFloatingBunnyExpr('happy');
+ showMochiSpeech(mochiQuotes[Math.floor(Math.random() * mochiQuotes.length)]);
+};
+function interactFloatingMochi(act) {
+ if (act === 'feed') {
+  setFloatingBunnyExpr('eat');
+  showMochiSpeech('nyam nyam~ stroberinya manis sekali! ♡');
+ } else {
+  setFloatingBunnyExpr('happy');
+  showMochiSpeech('purr~ hangat banget dielus kamu 🤍');
+ }
+ addCoins(1);
+}
+function toggleFloatingMochi() {
+ const w = document.getElementById('floatingMochi');
+ w.classList.toggle('minimized');
+ document.getElementById('mochiToggleBtn').textContent = w.classList.contains('minimized') ? '🐰' : '–';
+}
+setTimeout(() => showMochiSpeech('selamat datang di Little World Universe ♡'), 1200);
+
+// CAFE, GIFTS, MINI-GAMES, WISHING WELL, MOOD, DIARY, CAPSULE, WISHLIST, FORTUNE, COLLECTION
+let selectedDrink = { emoji: '🧋', name: 'Strawberry Milk Tea' };
+let selectedTopping = { emoji: '🧋', name: 'Pearls' };
+document.querySelectorAll('#drinkChoices button').forEach(b => b.onclick = () => {
+ document.querySelectorAll('#drinkChoices button').forEach(x => x.classList.remove('selected'));
+ b.classList.add('selected');
+ selectedDrink = { emoji: b.dataset.drink, name: b.dataset.name };
+ document.getElementById('drinkPreview').textContent = selectedDrink.emoji + ' ' + selectedTopping.emoji;
+ document.getElementById('drinkName').textContent = selectedDrink.name;
+});
+document.querySelectorAll('#toppingChoices button').forEach(b => b.onclick = () => {
+ document.querySelectorAll('#toppingChoices button').forEach(x => x.classList.remove('selected'));
+ b.classList.add('selected');
+ selectedTopping = { emoji: b.dataset.topping, name: b.dataset.topname };
+ document.getElementById('drinkPreview').textContent = selectedDrink.emoji + ' ' + selectedTopping.emoji;
+ document.getElementById('drinkDescription').textContent = 'Made with ' + selectedTopping.name.toLowerCase() + ' and love ♡';
+});
+const customers = [['🐻', 'A little bear wants something sweet!'], ['🐱', 'A kitty is craving a cute drink!'], ['🐰', 'A bunny wants a lovely treat!'], ['🦊', 'A fox would love something fruity!']];
+let customerIndex = 0;
+function serveDrink() {
+ const c = customers[customerIndex++ % customers.length];
+ document.getElementById('customerEmoji').textContent = c[0];
+ document.getElementById('customerOrder').textContent = c[1];
+ const reward = 10 + Math.floor(Math.random() * 6);
+ state.cafeEarned = (state.cafeEarned || 0) + reward;
+ addCoins(reward);
+ document.getElementById('cafeFeedback').textContent = `Yummy! Customer loved ${selectedDrink.name} + ${selectedTopping.name}. +${reward} coins! ♡`;
+}
+
+function todayKey() {
+ const d = new Date();
+ return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+const giftPool = [
+ ['🌷', 'A tiny flower', 'A flower for your garden.', 15],
+ ['💌', 'A sweet letter', 'A reminder that you are loved.', 10],
+ ['🎀', 'Pretty ribbon', 'A cute ribbon for your collection.', 20],
+ ['🧸', 'Tiny teddy', 'A soft friend for your shelf.', 25],
+ ['💎', 'Sparkly gem', 'A little sparkle for your day.', 30]
+];
+function openGift() {
+ if (state.lastGift === todayKey()) return showToast('Hadiah hari ini sudah dibuka! Besok lagi ya ♡');
+ const g = giftPool[Math.floor(Math.random() * giftPool.length)];
+ state.lastGift = todayKey();
+ state.gifts.push({ emoji: g[0], name: g[1], date: todayKey() });
+ addCoins(g[3]);
+ saveState();
+ renderGifts();
+ const box = document.getElementById('giftBox');
+ if (box) box.textContent = g[0];
+ document.getElementById('giftTitle').textContent = g[1] + ' (+' + g[3] + ' coins)';
+ document.getElementById('giftDescription').textContent = g[2];
+ showToast('Hadiah dibuka! +' + g[3] + ' coins ♡');
+ triggerMagicBurst();
+}
+function renderGifts() {
+ const el = document.getElementById('giftCollection');
+ if (!el) return;
+ el.innerHTML = (state.gifts || []).map(g =>
+  `<div class="item-btn"><span style="font-size:24px">${escapeHTML(g.emoji)}</span><br><small>${escapeHTML(g.name)}</small></div>`
+ ).join('') || '<p class="muted" style="grid-column:1/-1">Belum ada hadiah terkumpul.</p>';
+ if (state.lastGift === todayKey()) {
+  const btn = document.getElementById('giftButton');
+  if (btn) btn.textContent = 'Sudah dibuka hari ini ✓';
+ }
+}
+
+// Mini Games Arcade Helpers
+let memCards = [], memFlipped = [], memMatched = 0, memLocked = false;
+function startMemory() {
+ const grid = document.getElementById('memoryGrid');
+ const status = document.getElementById('memoryStatus');
+ if (!grid) return;
+ const icons = ['🍓', '🎀', '🌙', '🧁', '🧸', '🌸'];
+ memCards = [...icons, ...icons].sort(() => Math.random() - 0.5);
+ memFlipped = [];
+ memMatched = 0;
+ memLocked = false;
+ if (status) status.textContent = 'Temukan semua pasangan yang cocok ♡';
+ grid.innerHTML = memCards.map((icon, idx) =>
+  `<button class="memory-tile" data-idx="${idx}" onclick="flipMemory(${idx}, this)">?</button>`
+ ).join('');
+}
+function flipMemory(idx, btn) {
+ if (memLocked || btn.classList.contains('flipped') || btn.classList.contains('matched')) return;
+ btn.classList.add('flipped');
+ btn.textContent = memCards[idx];
+ memFlipped.push({ idx, btn });
+ if (memFlipped.length === 2) {
+  memLocked = true;
+  const [a, b] = memFlipped;
+  if (memCards[a.idx] === memCards[b.idx]) {
+   a.btn.classList.add('matched');
+   b.btn.classList.add('matched');
+   memMatched += 2;
+   memFlipped = [];
+   memLocked = false;
+   if (memMatched === memCards.length) {
+    addCoins(12);
+    document.getElementById('memoryStatus').textContent = 'Menang! +12 coins ♡';
+    showToast('Memory Match selesai! +12 coins ♡');
+   }
+  } else {
+   setTimeout(() => {
+    a.btn.classList.remove('flipped');
+    b.btn.classList.remove('flipped');
+    a.btn.textContent = '?';
+    b.btn.textContent = '?';
+    memFlipped = [];
+    memLocked = false;
+   }, 650);
+  }
+ }
+}
+
+const quizData = [
+ { q: 'Pilih aktivitas yang paling bikin kamu senang:', a: [['🌸 Piknik di taman bunga', 'Kamu Putri Taman yang lembut & penuh kasih ♡'], ['🌙 Menatap bintang malam', 'Kamu Putri Langit yang puitis & penuh imajinasi ✨'], ['🍰 Memanggang kue manis', 'Kamu Putri Kafe yang ceria & hangat 🧁']] },
+ { q: 'Kalau punya sayap ajaib, ke mana kamu terbang?', a: [['☁️ Negeri awan kapas', 'Jiwa petualangmu suka hal-hal dreamy!'], ['🏰 Istana kristal pelangi', 'Kamu punya selera estetik yang berkilau!'], ['🌊 Pantai mutiara biru', 'Ketenangan selalu membawamu pulang 🐚']] }
+];
+let quizIdx = 0;
+function startQuiz() {
+ const qEl = document.getElementById('quizQuestion');
+ const optsEl = document.getElementById('quizOptions');
+ const resEl = document.getElementById('quizResult');
+ if (!qEl || !optsEl) return;
+ const item = quizData[quizIdx % quizData.length];
+ quizIdx++;
+ qEl.textContent = item.q;
+ if (resEl) { resEl.classList.add('hidden'); resEl.textContent = ''; }
+ optsEl.innerHTML = item.a.map(([label, outcome]) =>
+  `<button class="quiz-option" onclick="pickQuiz('${outcome.replace(/'/g, "\\'")}')">${label}</button>`
+ ).join('');
+}
+function pickQuiz(outcome) {
+ const resEl = document.getElementById('quizResult');
+ if (resEl) { resEl.classList.remove('hidden'); resEl.textContent = outcome + ' (+5 coins)'; }
+ addCoins(5);
+}
+
+let starsCaught = 0;
+function startStars() {
+ const box = document.getElementById('starGame');
+ const st = document.getElementById('starStatus');
+ if (!box) return;
+ starsCaught = 0;
+ if (st) st.textContent = 'Tangkap 8 bintang untuk +15 koin! (0/8)';
+ box.innerHTML = Array.from({ length: 8 }, () =>
+  `<button class="item-btn" onclick="catchStar(this)" style="font-size:22px">⭐</button>`
+ ).join('');
+}
+function catchStar(btn) {
+ if (btn.dataset.done) return;
+ btn.dataset.done = '1';
+ btn.textContent = '✧';
+ btn.style.opacity = '.4';
+ starsCaught++;
+ const st = document.getElementById('starStatus');
+ if (st) st.textContent = `Tangkap 8 bintang untuk +15 koin! (${starsCaught}/8)`;
+ if (starsCaught === 8) {
+  addCoins(15);
+  if (st) st.textContent = 'Semua bintang tertangkap! +15 coins ♡';
+  showToast('Catch the Stars selesai! +15 coins ♡');
+ }
+}
+
+let bubblesPopped = 0;
+function startBubbles() {
+ const box = document.getElementById('bubbleGame');
+ const st = document.getElementById('bubbleStatus');
+ if (!box) return;
+ bubblesPopped = 0;
+ if (st) st.textContent = 'Pecahkan semua 10 gelembung pastel! (0/10)';
+ box.innerHTML = Array.from({ length: 10 }, () =>
+  `<button class="item-btn" onclick="popBubble(this)" style="font-size:22px">🫧</button>`
+ ).join('');
+}
+function popBubble(btn) {
+ if (btn.dataset.pop) return;
+ btn.dataset.pop = '1';
+ btn.textContent = '✨';
+ btn.style.opacity = '.45';
+ bubblesPopped++;
+ const st = document.getElementById('bubbleStatus');
+ if (st) st.textContent = `Pecahkan semua 10 gelembung pastel! (${bubblesPopped}/10)`;
+ if (bubblesPopped === 10) {
+  addCoins(10);
+  if (st) st.textContent = 'Pop! Semua gelembung pecah! +10 coins ♡';
+  showToast('Bubble Pop selesai! +10 coins ♡');
+ }
+}
+
+const feedFoods = ['🍓', '🥕', '🍪'];
+let wantedFood = '🍓';
+function resetFeedMini() {
+ wantedFood = feedFoods[Math.floor(Math.random() * feedFoods.length)];
+ const st = document.getElementById('feedStatus');
+ if (st) st.textContent = `${state.pet.name} mau ${wantedFood}!`;
+}
+function feedMini(food) {
+ const st = document.getElementById('feedStatus');
+ if (food === wantedFood) {
+  addCoins(6);
+  state.pet.hunger = Math.min(100, (state.pet.hunger || 75) + 12);
+  if (st) st.textContent = `Yey! ${state.pet.name} suka ${food}! +6 coins ♡`;
+  showToast('Tepat! +6 coins ♡');
+  resetFeedMini();
+ } else if (st) {
+  st.textContent = `${state.pet.name} maunya ${wantedFood}, coba lagi ya!`;
+ }
+}
+
+const challengeThemes = ['Fairy Garden', 'Royal Ball', 'Cotton Candy Cloud', 'Sakura Picnic'];
+let challengeIdx = 0;
+function completeChallenge() {
+ addCoins(10);
+ challengeIdx = (challengeIdx + 1) % challengeThemes.length;
+ const el = document.getElementById('challengeTheme');
+ if (el) el.textContent = 'Tema berikutnya: ' + challengeThemes[challengeIdx];
+ showToast('Look terkirim! +10 coins ♡');
+}
+
+// Custom Cute Cake Maker Studio (Play Store Style)
+const cakeCatalog = {
+ sponge: [
+  ['strawberry', '🍰', 'Strawberry Sponge', '#ffc2d9', '#f28cb3'],
+  ['vanilla', '🧁', 'Vanilla Cloud', '#fff0c7', '#e8c474'],
+  ['choco', '🍫', 'Choco Truffle', '#b87d56', '#855233'],
+  ['matcha', '🍵', 'Matcha Cream', '#c8ebc7', '#86be85'],
+  ['taro', '💜', 'Taro Velvet', '#d7c2f5', '#9d7fd4'],
+  ['mint', '🍃', 'Mint Choco Chip', '#bceee0', '#73c6b0'],
+  ['redvelvet', '❤️', 'Red Velvet', '#f2859c', '#bd3e5c'],
+  ['honey', '🍯', 'Honey Sponge', '#ffe39f', '#dfa843'],
+  ['blueberry', '🫐', 'Blueberry Swirl', '#b8ccf7', '#6d8fd6'],
+  ['peachcake', '🍑', 'Peach Shortcake', '#ffd4b8', '#eb9367'],
+  ['pistachio', '💚', 'Pistachio Sponge', '#cbe8be', '#7cb36b'],
+  ['caramelcake', '🍮', 'Salted Caramel', '#f5cfa0', '#cc8d47']
+ ],
+ frosting: [
+  ['pink', '🍨', 'Cotton Pink Frost', '#ff9ec7', '#ff70ad'],
+  ['sky', '🩵', 'Sky Whip Cream', '#9fd2ff', '#6cb4f7'],
+  ['lavender', '🌷', 'Lilac Buttercream', '#d3b5ff', '#ad82ed'],
+  ['peach', '🍑', 'Peach Glaze', '#ffc29e', '#f59a69'],
+  ['white', '🤍', 'Snowy Cream', '#ffffff', '#e6def5'],
+  ['berry', '🍓', 'Berry Mousse', '#f47ca2', '#d9527e'],
+  ['mintcream', '🌿', 'Pistachio Whip', '#b8ebd2', '#6ec49c'],
+  ['lemoncream', '🍋', 'Lemon Meringue', '#fff09e', '#e8c948'],
+  ['sakuracream', '🌸', 'Sakura Whip', '#ffcce3', '#f28cb8'],
+  ['chococream', '🍫', 'Choco Ganache', '#9e6644', '#6e4228']
+ ],
+ drizzle: [
+  ['none', '🚫', 'No Drizzle', 'transparent'],
+  ['choco', '🍯', 'Choco Drizzle', '#6e3f27'],
+  ['berry', '🍒', 'Berry Syrup', '#e85d8a'],
+  ['caramel', '🍮', 'Caramel Sauce', '#d98a3c'],
+  ['whitechoc', '🤍', 'White Choco', '#fff7fa'],
+  ['matcha', '🌿', 'Matcha Drizzle', '#6fb378'],
+  ['blueglaze', '🩵', 'Blueberry Glaze', '#6aa6e8'],
+  ['taroglaze', '💜', 'Taro Glaze', '#9e78d9'],
+  ['strawberryglaze', '🍓', 'Strawberry Glaze', '#ff7aa8']
+ ],
+ toppers: [
+  ['🕯️', 'Birthday Candle'],
+  ['🎂', 'Mini Cake'],
+  ['🧁', 'Cupcake Top'],
+  ['👑', 'Mini Crown'],
+  ['⭐', 'Gold Star'],
+  ['🌈', 'Mini Rainbow'],
+  ['🪄', 'Magic Wand'],
+  ['☀️', 'Sunny Charm'],
+  ['🌙', 'Crescent Moon'],
+  ['🎊', 'Party Popper']
+ ],
+ fruits: [
+  ['🍓', 'Strawberry'],
+  ['🍒', 'Cherry'],
+  ['🍡', 'Mochi'],
+  ['🍭', 'Lollipop'],
+  ['🍪', 'Cookie'],
+  ['🍩', 'Donut'],
+  ['🥐', 'Croissant'],
+  ['🌼', 'Daisy'],
+  ['🫐', 'Blueberry'],
+  ['🍑', 'Peach Slice'],
+  ['🥝', 'Kiwi'],
+  ['🩷', 'Sweet Macaron'],
+  ['🍋', 'Lemon Slice']
+ ],
+ charms: [
+  ['🎀', 'Pink Ribbon'],
+  ['🦋', 'Butterfly'],
+  ['✨', 'Sparkle'],
+  ['💗', 'Sweet Heart'],
+  ['🐰', 'Bunny Charm'],
+  ['🌸', 'Sakura'],
+  ['🐱', 'Kitty Charm'],
+  ['🍀', 'Lucky Clover'],
+  ['💎', 'Sugar Gem'],
+  ['🧸', 'Mini Bear']
+ ]
+};
+
+let cakeTab = 'sponge';
+let cakeState = {
+ sponge: 'strawberry',
+ frosting: 'pink',
+ drizzle: 'berry',
+ toppings: ['🕯️', '🍓', '🎀'],
+ lastAddedIdx: -1
+};
+
+document.getElementById('cakeTabs')?.addEventListener('click', e => {
+ const btn = e.target.closest('[data-cake-tab]');
+ if (!btn) return;
+ cakeTab = btn.dataset.cakeTab;
+ renderCustomCake();
+});
+
+function triggerCakeSurfaceSquish() {
+ const stage = document.getElementById('cakeStage');
+ if (!stage) return;
+ stage.classList.remove('frosting-squish');
+ void stage.offsetWidth;
+ stage.classList.add('frosting-squish');
+ setTimeout(() => stage.classList.remove('frosting-squish'), 500);
+}
+
+function chooseCakeOption(cat, val) {
+ if (cat === 'sponge' || cat === 'frosting' || cat === 'drizzle') {
+  cakeState[cat] = val;
+  cakeState.lastAddedIdx = -1;
+  triggerCakeSurfaceSquish();
+ } else {
+  if (cakeState.toppings.length >= 12) cakeState.toppings.shift();
+  cakeState.toppings.push(val);
+  cakeState.lastAddedIdx = cakeState.toppings.length - 1;
+  triggerCakeSurfaceSquish();
+ }
+ renderCustomCake();
+}
+
+function removeCakeTopping(idx) {
+ const removed = cakeState.toppings.splice(idx, 1)[0];
+ cakeState.lastAddedIdx = -1;
+ renderCustomCake();
+ if (removed) {
+  const st = document.getElementById('cakeStatus');
+  if (st) st.textContent = `Melepas ${removed} dari kue`;
+ }
+}
+
+function resetCakeDesign() {
+ cakeTab = 'sponge';
+ cakeState = { sponge: 'strawberry', frosting: 'pink', drizzle: 'berry', toppings: ['🕯️', '🍓', '🎀'], lastAddedIdx: -1 };
+ triggerCakeSurfaceSquish();
+ renderCustomCake();
+ const st = document.getElementById('cakeStatus');
+ if (st) st.textContent = 'Desain kue direset ke awal ♡';
+ showToast('Kue direset ♡');
+}
+
+function randomCakeDesign() {
+ const sList = cakeCatalog.sponge;
+ const fList = cakeCatalog.frosting;
+ const dList = cakeCatalog.drizzle;
+ const decoPool = [
+  ...cakeCatalog.toppers.map(x => x[0]),
+  ...cakeCatalog.fruits.map(x => x[0]),
+  ...cakeCatalog.charms.map(x => x[0])
+ ];
+ cakeState.sponge = sList[Math.floor(Math.random() * sList.length)][0];
+ cakeState.frosting = fList[Math.floor(Math.random() * fList.length)][0];
+ cakeState.drizzle = dList[Math.floor(Math.random() * dList.length)][0];
+ const count = 3 + Math.floor(Math.random() * 4);
+ cakeState.toppings = Array.from({ length: count }, () => decoPool[Math.floor(Math.random() * decoPool.length)]);
+ cakeState.lastAddedIdx = cakeState.toppings.length - 1;
+ triggerCakeSurfaceSquish();
+ renderCustomCake();
+ showToast('Kue acak siap dihias! 🎂');
+}
+
+function serveCustomCake() {
+ addCoins(12);
+ const frostObj = cakeCatalog.frosting.find(x => x[0] === cakeState.frosting) || cakeCatalog.frosting[0];
+ const spongeObj = cakeCatalog.sponge.find(x => x[0] === cakeState.sponge) || cakeCatalog.sponge[0];
+ const st = document.getElementById('cakeStatus');
+ if (st) st.textContent = `${frostObj[2]} ${spongeObj[2]} berhasil disajikan! +12 coins ♡`;
+ triggerMagicBurst();
+ showToast('Kue manis disajikan! +12 coins ♡');
+}
+
+function renderCustomCake() {
+ const spongeObj = cakeCatalog.sponge.find(x => x[0] === cakeState.sponge) || cakeCatalog.sponge[0];
+ const frostObj = cakeCatalog.frosting.find(x => x[0] === cakeState.frosting) || cakeCatalog.frosting[0];
+ const drizzleObj = cakeCatalog.drizzle.find(x => x[0] === cakeState.drizzle) || cakeCatalog.drizzle[0];
+
+ const topTier = document.getElementById('cakeTierTop');
+ const botTier = document.getElementById('cakeTierBottom');
+ const frostTop = document.getElementById('cakeFrostingTop');
+ const frostBot = document.getElementById('cakeFrostingBottom');
+ const captionEl = document.getElementById('cakeCaption');
+ const topperZone = document.getElementById('cakeTopperZone');
+ const counterEl = document.getElementById('cakeToppingCounter');
+ const wardrobeEl = document.getElementById('cakeWardrobe');
+
+ if (topTier) {
+  topTier.style.background = `linear-gradient(180deg, ${spongeObj[3]}, ${spongeObj[4]})`;
+  topTier.style.borderBottom = drizzleObj[0] !== 'none' ? `5px solid ${drizzleObj[3]}` : '2px solid #ffffffc8';
+ }
+ if (botTier) {
+  botTier.style.background = `linear-gradient(180deg, ${spongeObj[3]}, ${spongeObj[4]})`;
+  botTier.style.borderBottom = drizzleObj[0] !== 'none' ? `6px solid ${drizzleObj[3]}` : '2px solid #ffffffc8';
+ }
+ if (frostTop) frostTop.style.background = `linear-gradient(180deg, ${frostObj[3]}, ${frostObj[4]})`;
+ if (frostBot) frostBot.style.background = `linear-gradient(180deg, ${frostObj[3]}, ${frostObj[4]})`;
+ if (captionEl) captionEl.textContent = `${frostObj[2]} · ${spongeObj[2]}`;
+ if (counterEl) counterEl.textContent = `${cakeState.toppings.length} toppings`;
+
+ if (topperZone) {
+  topperZone.innerHTML = cakeState.toppings.length
+   ? cakeState.toppings.map((emoji, idx) => {
+     const isFresh = idx === cakeState.lastAddedIdx;
+     const archLift = (idx % 2 === 0 ? -3 : 2);
+     return `<span class="cake-topper-item ${isFresh ? 'land-puff' : ''}" style="transform:translateY(${archLift}px)" onclick="removeCakeTopping(${idx})" title="Klik untuk lepas">${escapeHTML(emoji)}</span>`;
+    }).join('')
+   : '<span class="muted" style="font-size:11px">Tambahkan topping & hiasan dari panel kanan</span>';
+ }
+ cakeState.lastAddedIdx = -1;
+
+ document.querySelectorAll('[data-cake-tab]').forEach(b => b.classList.toggle('active', b.dataset.cakeTab === cakeTab));
+
+ if (wardrobeEl) {
+  const list = cakeCatalog[cakeTab] || cakeCatalog.sponge;
+  const isLayer = ['sponge', 'frosting', 'drizzle'].includes(cakeTab);
+  wardrobeEl.innerHTML = `
+   <div class="cake-wardrobe">
+    ${list.map(([id, emoji, name, c1]) => {
+     const selected = isLayer && cakeState[cakeTab] === id;
+     const swatchStyle = c1 && c1 !== 'transparent' ? `background:${c1}` : 'background:var(--pill-bg)';
+     return `
+      <button class="cake-choice ${selected ? 'selected' : ''}" onclick="chooseCakeOption('${cakeTab}','${id}')">
+       <span class="choice-swatch" style="${swatchStyle}">${escapeHTML(emoji)}</span>
+       <span class="choice-name">${escapeHTML(name)}</span>
+      </button>
+     `;
+    }).join('')}
+   </div>
+  `;
+ }
+}
+
+function tossWishCoin() {
+ if (state.coins < 5) return showToast('Koin belum cukup (butuh 5 coins) ♡');
+ state.coins -= 5;
+ const outcomes = [
+  { msg: '✨ Keajaiban! Sumur harapan memberimu +15 coins!', coins: 15, xp: 20 },
+  { msg: '🌸 Kelopak sakura berjatuhan! Kamu mendapat +35 XP!', coins: 0, xp: 35 },
+  { msg: '💖 Jackpot! Harta karun rahasia +25 coins & +25 XP!', coins: 25, xp: 25 },
+  { msg: '🌷 Pesan semesta: "Hal-hal indah sedang menuju ke arahmu." (+8 coins)', coins: 8, xp: 15 }
+ ];
+ const pick = outcomes[Math.floor(Math.random() * outcomes.length)];
+ state.coins += pick.coins;
+ state.xp += pick.xp;
+ checkLevel();
+ saveState();
+ document.getElementById('wellResult').textContent = pick.msg;
+ triggerMagicBurst();
+ showToast('Wish granted! ✨');
+}
+
+function spawnAmbientPetal() {
+ const layer = document.getElementById('ambientLayer');
+ if (!layer || document.hidden) return;
+ const icons = ['🌸', '✧', '🫧', '🦋', '🌷', '⋆'];
+ const el = document.createElement('span');
+ el.className = 'ambient-petal';
+ el.textContent = icons[Math.floor(Math.random() * icons.length)];
+ el.style.left = Math.random() * 96 + 'vw';
+ const dur = 7 + Math.random() * 6;
+ el.style.animationDuration = dur + 's';
+ layer.appendChild(el);
+ setTimeout(() => el.remove(), dur * 1000);
+}
+setInterval(spawnAmbientPetal, 2400);
+
+function triggerMagicBurst() {
+ const icons = ['✨', '💖', '🌸', '🦋', '⭐', '🎀'];
+ for (let i = 0; i < 14; i++) {
+  const s = document.createElement('span');
+  s.className = 'cursor-sparkle';
+  s.textContent = icons[i % icons.length];
+  s.style.left = (15 + Math.random() * 70) + 'vw';
+  s.style.top = (20 + Math.random() * 55) + 'vh';
+  s.style.fontSize = (18 + Math.random() * 14) + 'px';
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 900);
+ }
+}
+
+// Mood, Diary, Capsule, Wishlist, Fortune, Collection, Settings
+document.querySelectorAll('.mood-btn').forEach(b => b.onclick = () => {
+ document.querySelectorAll('.mood-btn').forEach(x => x.classList.remove('selected'));
+ b.classList.add('selected');
+ window.selectedMood = b.dataset.mood;
+});
+function saveMood() {
+ if (!window.selectedMood) return showToast('Pilih mood dulu ya ♡');
+ state.moods.push({ mood: window.selectedMood, note: document.getElementById('moodNote').value.trim(), date: new Date().toLocaleDateString('id-ID') });
+ document.getElementById('moodNote').value = '';
+ saveState();
+ renderMoods();
+ showToast('Mood tersimpan ♡');
+}
+function renderMoods() {
+ document.getElementById('moodHistory').innerHTML = state.moods.slice().reverse().map(m =>
+  `<div class="diary-entry"><strong>${m.mood}</strong> · <small class="muted">${m.date}</small><p>${m.note || 'No note today.'}</p></div>`
+ ).join('') || '<p class="muted">No moods logged yet.</p>';
+}
+
+function saveDiary() {
+ const title = document.getElementById('diaryTitle').value.trim();
+ const text = document.getElementById('diaryText').value.trim();
+ if (!text) return showToast('Tulis isi diary dulu ya ♡');
+ state.diary.push({ title: title || 'A little note', text, date: new Date().toLocaleString('id-ID') });
+ document.getElementById('diaryTitle').value = '';
+ document.getElementById('diaryText').value = '';
+ saveState();
+ renderDiary();
+ showToast('Diary saved ♡');
+}
+function renderDiary() {
+ document.getElementById('diaryList').innerHTML = state.diary.slice().reverse().map(d =>
+  `<div class="diary-entry"><strong>${d.title}</strong> · <small class="muted">${d.date}</small><p>${d.text}</p></div>`
+ ).join('') || '<p class="muted">No diary entries yet.</p>';
+}
+
+function saveCapsule() {
+ const date = document.getElementById('capsuleDate').value;
+ const text = document.getElementById('capsuleText').value.trim();
+ if (!date || !text) return showToast('Pilih tanggal & tulis pesan dulu ya ♡');
+ state.capsules.push({ date, text });
+ document.getElementById('capsuleText').value = '';
+ saveState();
+ renderCapsules();
+ showToast('Time capsule sealed 🔒');
+}
+function renderCapsules() {
+ document.getElementById('capsuleList').innerHTML = state.capsules.slice().reverse().map(c =>
+  `<div class="diary-entry"><strong>${c.date <= todayKey() ? '🔓' : '🔒'} ${c.date}</strong><p>${c.date <= todayKey() ? c.text : 'Terkunci rapat sampai tanggalnya tiba ✧'}</p></div>`
+ ).join('') || '<p class="muted">No time capsules yet.</p>';
+}
+
+function addWish() {
+ const w = document.getElementById('wishInput').value.trim();
+ if (!w) return showToast('Tulis impianmu dulu ♡');
+ state.wishes.push({ text: w, done: false });
+ document.getElementById('wishInput').value = '';
+ saveState();
+ renderWishes();
+}
+function renderWishes() {
+ document.getElementById('wishList').innerHTML = state.wishes.map((w, i) => `
+  <div class="diary-entry" style="display:flex;justify-content:space-between;align-items:center">
+   <span style="${w.done ? 'text-decoration:line-through;opacity:.55' : ''}">${w.done ? '♡ ' : ''}${escapeHTML(w.text)}</span>
+   <span>
+    <button class="pill" onclick="toggleWish(${i})">${w.done ? 'Undo' : 'Done'}</button>
+    <button class="pill" onclick="deleteWish(${i})">×</button>
+   </span>
+  </div>
+ `).join('') || '<p class="muted">Your wishlist is waiting for dreams ♡</p>';
+}
+function toggleWish(i) { state.wishes[i].done = !state.wishes[i].done; saveState(); renderWishes(); }
+function deleteWish(i) { state.wishes.splice(i, 1); saveState(); renderWishes(); }
+
+const quotes = [
+ 'You are allowed to bloom at your own pace.',
+ 'Soft hearts are strong hearts.',
+ 'You deserve the same kindness you give to others.',
+ 'A tiny step is still a beautiful kind of progress.'
+];
+function newQuote() { document.getElementById('homeQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)]; }
+function newFortune() { document.getElementById('fortuneText').textContent = quotes[Math.floor(Math.random() * quotes.length)]; }
+
+function renderCollection() {
+ document.getElementById('fashionCollection').innerHTML = `
+  <div class="item-btn">👗<br>${dressCatalog.outfits.length} Gowns</div>
+  <div class="item-btn">💇<br>${dressCatalog.hair.length} Hairstyles</div>
+  <div class="item-btn">👑<br>${dressCatalog.crowns.length} Crowns</div>
+  <div class="item-btn">💍<br>${dressCatalog.extras.length} Extras</div>
+ `;
+ document.getElementById('petCollection').innerHTML = (state.ownedPets || []).map(e => `<div class="item-btn" style="font-size:24px">${e}<br><small>Friend</small></div>`).join('');
+ document.getElementById('decorCollection').innerHTML = (state.decorOwned || []).map(e => `<div class="item-btn" style="font-size:24px">${e}<br><small>Decor</small></div>`).join('');
+ document.getElementById('achievementList').innerHTML = [
+  ['🌟 First Steps', state.xp > 0],
+  ['👗 Fashion Stylist', state.outfit !== 'rose'],
+  ['🐾 Bestie Collector', (state.ownedPets || []).length > 1],
+  ['🏡 Cozy Decorator', (state.decorOwned || []).length > 4],
+  ['💰 Coin Saver', state.coins >= 50]
+ ].map(([label, ok]) => `<div class="diary-entry">${label} <b>${ok ? '✓ Unlocked' : '· Locked'}</b></div>`).join('');
+}
+
+function saveNickname() {
+ state.nickname = document.getElementById('playerNickname').value.trim().slice(0, 20);
+ saveState();
+ showToast('Saved nickname: ' + (state.nickname || 'Little Star') + ' ♡');
+}
+function exportSave() {
+ const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+ const a = document.createElement('a');
+ a.href = URL.createObjectURL(blob);
+ a.download = 'little-world-universe-save.json';
+ a.click();
+ URL.revokeObjectURL(a.href);
+}
+
+// Initialize Everything Cleanly
+updateStats();
+document.querySelectorAll('#princessChoices button').forEach((b, i) => {
+ b.classList.toggle('selected', ['luna', 'flora', 'aria'][i] === (state.princess || 'luna'));
+});
+renderDress();
+renderPet();
+renderRoom();
+renderGallery();
+renderSpotifyEmbeds();
+renderGifts();
+renderMoods();
+renderDiary();
+renderCapsules();
+renderWishes();
+renderCollection();
+startMemory();
+startQuiz();
+startStars();
+startBubbles();
+resetFeedMini();
+renderCustomCake();
+setGamesSubtab('arcade');
+</script>
+</body>
+</html>
